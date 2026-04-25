@@ -2,160 +2,133 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>شواحةتيوب</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شواحة لخدمات اليوتيوب</title>
     <style>
-        :root { --accent: #ff4757; --bg: #0c0c0c; --panel: #1a1a1a; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
-        
-        h1 { margin-bottom: 10px; color: var(--accent); text-shadow: 0 0 10px rgba(255, 71, 87, 0.5); }
-
-        .mixer-container { display: flex; gap: 15px; background: #000; padding: 20px; border-radius: 15px; border: 2px solid #333; box-shadow: 0 0 50px rgba(0,0,0,0.8); max-width: 95%; }
-        
-        .deck { background: var(--panel); padding: 15px; border-radius: 12px; width: 350px; text-align: center; border: 1px solid #444; }
-        
-        /* شاشة عرض الفيديو */
-        .video-screen { 
-            width: 100%; 
-            height: 200px; 
-            background: #000; 
-            border-radius: 8px; 
-            margin-bottom: 15px; 
-            overflow: hidden;
-            border: 2px solid #444;
+        :root {
+            --primary-color: #ff0000; /* تغيير اللون للأحمر ليتماشى مع يوتيوب */
+            --bg-dark: #0f0f0f;
+            --card-bg: #1e1e1e;
         }
 
-        .search-area { margin-bottom: 10px; display: flex; gap: 5px; }
-        input { flex: 1; padding: 8px; border-radius: 5px; border: none; background: #222; color: white; font-size: 14px; }
-        button { background: var(--accent); color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; transition: 0.2s; }
-        button:hover { background: #ff6b81; }
+        body { 
+            background-color: var(--bg-dark); 
+            color: white; 
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-        .results-list { height: 120px; overflow-y: auto; background: #111; margin: 10px 0; border-radius: 5px; font-size: 12px; text-align: right; }
-        .res-item { padding: 8px; cursor: pointer; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 10px; }
-        .res-item:hover { background: #333; }
-        .res-item img { width: 50px; height: 35px; border-radius: 3px; }
+        .player-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            width: 90%;
+            max-width: 500px; /* زيادة العرض ليناسب الفيديو */
+            text-align: center;
+            border: 1px solid #333;
+        }
 
-        /* منطقة التحكم */
-        .controls { margin-top: 15px; background: #111; padding: 10px; border-radius: 8px; }
-        .vol-label { font-size: 12px; color: #888; display: block; margin-bottom: 5px; }
-        input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--accent); }
-        
-        /* القسم الأوسط */
-        .center-section { display: flex; flex-direction: column; align-items: center; justify-content: space-around; width: 140px; }
-        .crossfader-wrap { text-align: center; width: 100%; }
-        .crossfader { width: 100px; transform: scale(1.2); }
-        
-        .stop-btn { background: #444; width: 80%; font-size: 12px; margin-top: 20px; }
+        h1 { font-size: 1.1rem; color: var(--primary-color); margin-bottom: 15px; }
+        #video-title { font-size: 1rem; margin-bottom: 15px; font-weight: bold; display: block; }
+
+        /* حاوية الفيديو لجعلها متجاوبة */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* نسبة 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+            background: #000;
+            margin-bottom: 20px;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn {
+            background: #2a2a2a;
+            border: none;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .btn:hover { background: var(--primary-color); color: white; }
     </style>
 </head>
 <body>
 
-    <h1>🎧دي جي شواحة🎧</h1>
-
-    <div class="mixer-container">
-        <div class="deck">
-            <div class="video-screen" id="player1"></div> <div class="search-area">
-                <input type="text" id="queryA" placeholder="ابحث في القناة A...">
-                <button onclick="search('A')">🔍</button>
-            </div>
-            <div id="resultsA" class="results-list"></div>
-            <div class="controls">
-                <span class="vol-label">LEVEL A</span>
-                <input type="range" min="0" max="100" value="100" oninput="setVol('A', this.value)">
-            </div>
+    <div class="player-card">
+        <h1>📺 شواحة لعرض اليوتيوب</h1>
+        <span id="video-title">تحميل الفيديو...</span>
+        
+        <div class="video-container">
+            <iframe id="youtube-frame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
 
-        <div class="center-section">
-            <div class="crossfader-wrap">
-                <span style="font-size: 10px; color: var(--accent); letter-spacing: 2px;">CROSSFADER</span><br>
-                <input type="range" class="crossfader" min="0" max="100" value="50" oninput="crossfade(this.value)">
-                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 5px; font-weight: bold;">
-                    <span style="color:white">A</span><span style="color:white">B</span>
-                </div>
-            </div>
-            <button class="stop-btn" onclick="stopAll()">STOP ALL</button>
-        </div>
-
-        <div class="deck">
-            <div class="video-screen" id="player2"></div> <div class="search-area">
-                <input type="text" id="queryB" placeholder="ابحث في القناة B...">
-                <button onclick="search('B')">🔍</button>
-            </div>
-            <div id="resultsB" class="results-list"></div>
-            <div class="controls">
-                <span class="vol-label">LEVEL B</span>
-                <input type="range" min="0" max="100" value="100" oninput="setVol('B', this.value)">
-            </div>
+        <div class="controls">
+            <button class="btn" onclick="prevVideo()">⏮</button>
+            <span style="font-size: 0.8rem; opacity: 0.6;">تنقل بين الفيديوهات</span>
+            <button class="btn" onclick="nextVideo()">⏭</button>
         </div>
     </div>
 
     <script>
-        const API_KEY = 'ضع_مفتاحك_هنا'; 
-        let playerA, playerB;
+        // قائمة الفيديوهات - ضع معرف الفيديو (Video ID) هنا
+        const playlist = [
+            { id: "dQw4w9WgXcQ", title: "فيديو التجربة الأول" },
+            { id: "jNQXAC9IVRw", title: "فيديو التجربة الثاني" },
+            { id: "9bZkp7q19f0", title: "فيديو التجربة الثالث" }
+        ];
 
-        // تحميل مكتبة YouTube
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        let currentIndex = 0;
+        const frame = document.getElementById('youtube-frame');
+        const titleDisplay = document.getElementById('video-title');
 
-        function onYouTubeIframeAPIReady() {
-            playerA = new YT.Player('player1', {
-                height: '100%', width: '100%',
-                videoId: '', // يبدأ فارغاً
-                playerVars: { 'autoplay': 0, 'controls': 0, 'modestbranding': 1 }
-            });
-            playerB = new YT.Player('player2', {
-                height: '100%', width: '100%',
-                videoId: '',
-                playerVars: { 'autoplay': 0, 'controls': 0, 'modestbranding': 1 }
-            });
+        function loadVideo(index) {
+            const video = playlist[index];
+            // نستخدم رابط embed وليس الرابط العادي
+            frame.src = `https://www.youtube.com/embed/${video.id}?autoplay=0`;
+            titleDisplay.innerText = video.title;
         }
 
-        async function search(deck) {
-            const query = document.getElementById('query' + deck).value;
-            if (!query) return;
-
-            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=${query}&type=video&key=${API_KEY}`;
-            
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                displayResults(data.items, deck);
-            } catch (e) { alert("تأكد من الـ API Key"); }
+        function nextVideo() {
+            currentIndex = (currentIndex + 1) % playlist.length;
+            loadVideo(currentIndex);
         }
 
-        function displayResults(items, deck) {
-            const container = document.getElementById('results' + deck);
-            container.innerHTML = '';
-            items.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'res-item';
-                div.innerHTML = `<img src="${item.snippet.thumbnails.default.url}"><span>${item.snippet.title}</span>`;
-                div.onclick = () => {
-                    const p = (deck === 'A') ? playerA : playerB;
-                    p.loadVideoById(item.id.videoId);
-                };
-                container.appendChild(div);
-            });
+        function prevVideo() {
+            currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+            loadVideo(currentIndex);
         }
 
-        function setVol(deck, val) {
-            const p = (deck === 'A') ? playerA : playerB;
-            if (p && p.setVolume) p.setVolume(val);
-        }
-
-        function crossfade(val) {
-            let volA = 100, volB = 100;
-            if (val > 50) volA = 100 - ((val - 50) * 2);
-            if (val < 50) volB = val * 2;
-            playerA.setVolume(volA);
-            playerB.setVolume(volB);
-        }
-
-        function stopAll() {
-            playerA.stopVideo();
-            playerB.stopVideo();
-        }
+        // تحميل الفيديو الأول عند فتح الصفحة
+        window.onload = () => loadVideo(currentIndex);
     </script>
 </body>
 </html>
