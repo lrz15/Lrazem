@@ -3,132 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شواحة لخدمات اليوتيوب</title>
+    <title>دي جي شواحة 🎧</title>
     <style>
         :root {
-            --primary-color: #ff0000; /* تغيير اللون للأحمر ليتماشى مع يوتيوب */
-            --bg-dark: #0f0f0f;
-            --card-bg: #1e1e1e;
+            --accent-color: #ff4141;
+            --bg-black: #0a0a0a;
+            --panel-bg: #1a1a1a;
         }
 
-        body { 
-            background-color: var(--bg-dark); 
-            color: white; 
-            font-family: sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .player-card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 25px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-            width: 90%;
-            max-width: 500px; /* زيادة العرض ليناسب الفيديو */
-            text-align: center;
-            border: 1px solid #333;
-        }
-
-        h1 { font-size: 1.1rem; color: var(--primary-color); margin-bottom: 15px; }
-        #video-title { font-size: 1rem; margin-bottom: 15px; font-weight: bold; display: block; }
-
-        /* حاوية الفيديو لجعلها متجاوبة */
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* نسبة 16:9 */
-            height: 0;
-            overflow: hidden;
-            border-radius: 15px;
-            background: #000;
-            margin-bottom: 20px;
-        }
-
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .btn {
-            background: #2a2a2a;
-            border: none;
+        body {
+            background-color: var(--bg-black);
             color: white;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: 0.3s;
-            width: 50px;
-            height: 50px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
+            padding: 20px;
         }
 
-        .btn:hover { background: var(--primary-color); color: white; }
+        h1 { color: var(--accent-color); margin-bottom: 20px; }
+
+        .mixer-container {
+            display: flex;
+            gap: 15px;
+            background: #111;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #333;
+            width: 95%;
+            max-width: 900px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .deck {
+            background: var(--panel-bg);
+            padding: 15px;
+            border-radius: 10px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .video-slot {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        iframe { width: 100%; height: 100%; border: none; }
+
+        .controls-row {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent-color);
+            cursor: pointer;
+        }
+
+        .label {
+            font-size: 0.7rem;
+            text-align: center;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        /* الجزء الأوسط (الكروس فيدر) */
+        .center-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            width: 80px;
+        }
+
+        .crossfader-wrap {
+            transform: rotate(-90deg); /* لجعل السلايدر عمودي إذا أردت أو اتركه أفقي */
+            width: 100px;
+        }
+
+        .btn-stop {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        .btn-stop:hover { background: var(--accent-color); }
     </style>
 </head>
 <body>
 
-    <div class="player-card">
-        <h1>📺 شواحة لعرض اليوتيوب</h1>
-        <span id="video-title">تحميل الفيديو...</span>
-        
-        <div class="video-container">
-            <iframe id="youtube-frame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <h1>🎧 دي جي شواحة 🎧</h1>
+
+    <div class="mixer-container">
+        <div class="deck">
+            <div class="video-slot">
+                <iframe src="https://www.youtube.com/embed?listType=search&list=مهرجانات"></iframe>
+            </div>
+            <div class="controls-row">
+                <input type="text" placeholder="بحث في القناة A..." style="background:#222; border:1px solid #444; color:white; padding:5px; border-radius:4px; font-size: 0.8rem;">
+                <div class="label">LEVEL A</div>
+                <input type="range" min="0" max="100" value="80">
+            </div>
         </div>
 
-        <div class="controls">
-            <button class="btn" onclick="prevVideo()">⏮</button>
-            <span style="font-size: 0.8rem; opacity: 0.6;">تنقل بين الفيديوهات</span>
-            <button class="btn" onclick="nextVideo()">⏭</button>
+        <div class="center-section">
+            <div class="label">CROSSFADER</div>
+            <input type="range" min="0" max="100" value="50">
+            <button class="btn-stop">STOP ALL</button>
+        </div>
+
+        <div class="deck">
+            <div class="video-slot">
+                <iframe src="https://www.youtube.com/embed?listType=search&list=شعبي"></iframe>
+            </div>
+            <div class="controls-row">
+                <input type="text" placeholder="بحث في القناة B..." style="background:#222; border:1px solid #444; color:white; padding:5px; border-radius:4px; font-size: 0.8rem;">
+                <div class="label">LEVEL B</div>
+                <input type="range" min="0" max="100" value="80">
+            </div>
         </div>
     </div>
 
-    <script>
-        // قائمة الفيديوهات - ضع معرف الفيديو (Video ID) هنا
-        const playlist = [
-            { id: "dQw4w9WgXcQ", title: "فيديو التجربة الأول" },
-            { id: "jNQXAC9IVRw", title: "فيديو التجربة الثاني" },
-            { id: "9bZkp7q19f0", title: "فيديو التجربة الثالث" }
-        ];
-
-        let currentIndex = 0;
-        const frame = document.getElementById('youtube-frame');
-        const titleDisplay = document.getElementById('video-title');
-
-        function loadVideo(index) {
-            const video = playlist[index];
-            // نستخدم رابط embed وليس الرابط العادي
-            frame.src = `https://www.youtube.com/embed/${video.id}?autoplay=0`;
-            titleDisplay.innerText = video.title;
-        }
-
-        function nextVideo() {
-            currentIndex = (currentIndex + 1) % playlist.length;
-            loadVideo(currentIndex);
-        }
-
-        function prevVideo() {
-            currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
-            loadVideo(currentIndex);
-        }
-
-        // تحميل الفيديو الأول عند فتح الصفحة
-        window.onload = () => loadVideo(currentIndex);
-    </script>
 </body>
 </html>
