@@ -3,85 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متصفح يوتيوب المزدوج - شواحة</title>
+    <title>دي جي شواحة - النسخة الاحترافية</title>
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-            background-color: #0f0f0f;
-            font-family: sans-serif;
-        }
-
-        /* عنوان علوي بسيط */
-        .header {
-            height: 40px;
-            background: #202020;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ff0000;
-            font-weight: bold;
-            border-bottom: 1px solid #333;
-        }
-
-        /* حاوية المتصفحين */
-        .browser-container {
-            display: flex;
-            height: calc(100vh - 40px); /* طرح طول الهيدر */
-            width: 100vw;
-        }
-
-        /* كل خانة متصفح */
-        .browser-pane {
-            flex: 1;
-            border: 1px solid #333;
-            position: relative;
-        }
-
-        /* الفاصل الأوسط */
-        .divider {
-            width: 5px;
-            background: #333;
-            cursor: col-resize;
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* رسالة توضيحية في حال حجب الموقع */
-        .fallback-msg {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: #888;
-            z-index: -1;
-        }
+        :root { --accent: #ff4141; --bg: #0a0a0a; --panel: #1a1a1a; }
+        body { background: var(--bg); color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .mixer-container { display: flex; gap: 10px; background: #111; padding: 15px; border-radius: 15px; width: 100%; max-width: 900px; }
+        .deck { background: var(--panel); padding: 10px; border-radius: 10px; flex: 1; text-align: center; }
+        .video-slot { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px; margin-bottom: 10px; pointer-events: none; }
+        .controls { display: flex; justify-content: center; gap: 15px; margin-top: 10px; }
+        .btn { background: #333; border: none; color: white; padding: 10px; border-radius: 50%; cursor: pointer; width: 40px; height: 40px; }
+        .btn:hover { background: var(--accent); }
+        .label { font-size: 0.7rem; color: #888; margin-top: 5px; }
+        input[type="range"] { width: 80%; accent-color: var(--accent); }
+        .center-section { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 60px; gap: 20px; }
     </style>
 </head>
 <body>
 
-    <div class="header">🎧 دي جي شواحة - متصفح يوتيوب المزدوج 🎧</div>
+    <h1>🎧 دي جي شواحة</h1>
 
-    <div class="browser-container">
-        <div class="browser-pane">
-            <div class="fallback-msg">جاري تحميل يوتيوب الرئيسي (A)...</div>
-            <iframe src="https://www.youtube.com"></iframe>
+    <div class="mixer-container">
+        <div class="deck">
+            <div id="playerA" class="video-slot"></div>
+            <div class="controls">
+                <button class="btn" onclick="prev('A')">⏮</button>
+                <button class="btn" onclick="playPause('A')">⏯</button>
+                <button class="btn" onclick="next('A')">⏭</button>
+            </div>
+            <div class="label">LEVEL A</div>
+            <input type="range" oninput="setVolume('A', this.value)" min="0" max="100" value="100">
         </div>
 
-        <div class="divider"></div>
+        <div class="center-section">
+            <div class="label">MIX</div>
+            <input type="range" style="transform: rotate(-90deg); width: 80px;" min="0" max="100" value="50">
+        </div>
 
-        <div class="browser-pane">
-            <div class="fallback-msg">جاري تحميل يوتيوب الرئيسي (B)...</div>
-            <iframe src="https://www.youtube.com"></iframe>
+        <div class="deck">
+            <div id="playerB" class="video-slot"></div>
+            <div class="controls">
+                <button class="btn" onclick="prev('B')">⏮</button>
+                <button class="btn" onclick="playPause('B')">⏯</button>
+                <button class="btn" onclick="next('B')">⏭</button>
+            </div>
+            <div class="label">LEVEL B</div>
+            <input type="range" oninput="setVolume('B', this.value)" min="0" max="100" value="100">
         </div>
     </div>
 
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <script>
+        let playerA, playerB;
+        
+        // قوائم التشغيل (ضع الـ ID الخاص بالفيديوهات هنا)
+        const playlistA = ["dQw4w9WgXcQ", "jNQXAC9IVRw", "9bZkp7q19f0"];
+        const playlistB = ["kJQP7kiw5Fk", "L_jWHffIx5E", "hT_nvWreIhg"];
+        
+        let indexA = 0, indexB = 0;
+
+        function onYouTubeIframeAPIReady() {
+            playerA = new YT.Player('playerA', {
+                height: '100%', width: '100%',
+                videoId: playlistA[0],
+            });
+            playerB = new YT.Player('playerB', {
+                height: '100%', width: '100%',
+                videoId: playlistB[0],
+            });
+        }
+
+        function playPause(deck) {
+            const p = deck === 'A' ? playerA : playerB;
+            if (p.getPlayerState() === 1) p.pauseVideo();
+            else p.playVideo();
+        }
+
+        function next(deck) {
+            if (deck === 'A') {
+                indexA = (indexA + 1) % playlistA.length;
+                playerA.loadVideoById(playlistA[indexA]);
+            } else {
+                indexB = (indexB + 1) % playlistB.length;
+                playerB.loadVideoById(playlistB[indexB]);
+            }
+        }
+
+        function prev(deck) {
+            if (deck === 'A') {
+                indexA = (indexA - 1 + playlistA.length) % playlistA.length;
+                playerA.loadVideoById(playlistA[indexA]);
+            } else {
+                indexB = (indexB - 1 + playlistB.length) % playlistB.length;
+                playerB.loadVideoById(playlistB[indexB]);
+            }
+        }
+
+        function setVolume(deck, vol) {
+            const p = deck === 'A' ? playerA : playerB;
+            p.setVolume(vol);
+        }
+    </script>
 </body>
 </html>
