@@ -3,138 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دي جي شواحة 🎧</title>
+    <title>متصفح يوتيوب المزدوج - شواحة</title>
     <style>
-        :root {
-            --accent-color: #ff4141;
-            --bg-black: #0a0a0a;
-            --panel-bg: #1a1a1a;
-        }
-
-        body {
-            background-color: var(--bg-black);
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        body, html {
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-
-        h1 { color: var(--accent-color); margin-bottom: 20px; }
-
-        .mixer-container {
-            display: flex;
-            gap: 15px;
-            background: #111;
-            padding: 20px;
-            border-radius: 15px;
-            border: 1px solid #333;
-            width: 95%;
-            max-width: 900px;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .deck {
-            background: var(--panel-bg);
-            padding: 15px;
-            border-radius: 10px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .video-slot {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background: #000;
-            border-radius: 5px;
+            padding: 0;
+            height: 100%;
             overflow: hidden;
+            background-color: #0f0f0f;
+            font-family: sans-serif;
         }
 
-        iframe { width: 100%; height: 100%; border: none; }
-
-        .controls-row {
+        /* عنوان علوي بسيط */
+        .header {
+            height: 40px;
+            background: #202020;
             display: flex;
-            flex-direction: column;
-            gap: 5px;
-            margin-top: 10px;
+            align-items: center;
+            justify-content: center;
+            color: #ff0000;
+            font-weight: bold;
+            border-bottom: 1px solid #333;
         }
 
-        input[type="range"] {
+        /* حاوية المتصفحين */
+        .browser-container {
+            display: flex;
+            height: calc(100vh - 40px); /* طرح طول الهيدر */
+            width: 100vw;
+        }
+
+        /* كل خانة متصفح */
+        .browser-pane {
+            flex: 1;
+            border: 1px solid #333;
+            position: relative;
+        }
+
+        /* الفاصل الأوسط */
+        .divider {
+            width: 5px;
+            background: #333;
+            cursor: col-resize;
+        }
+
+        iframe {
             width: 100%;
-            accent-color: var(--accent-color);
-            cursor: pointer;
+            height: 100%;
+            border: none;
         }
 
-        .label {
-            font-size: 0.7rem;
+        /* رسالة توضيحية في حال حجب الموقع */
+        .fallback-msg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
             color: #888;
-            text-transform: uppercase;
+            z-index: -1;
         }
-
-        /* الجزء الأوسط (الكروس فيدر) */
-        .center-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 30px;
-            width: 80px;
-        }
-
-        .crossfader-wrap {
-            transform: rotate(-90deg); /* لجعل السلايدر عمودي إذا أردت أو اتركه أفقي */
-            width: 100px;
-        }
-
-        .btn-stop {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 10px 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.7rem;
-        }
-
-        .btn-stop:hover { background: var(--accent-color); }
     </style>
 </head>
 <body>
 
-    <h1>🎧 دي جي شواحة 🎧</h1>
+    <div class="header">🎧 دي جي شواحة - متصفح يوتيوب المزدوج 🎧</div>
 
-    <div class="mixer-container">
-        <div class="deck">
-            <div class="video-slot">
-                <iframe src="https://www.youtube.com/embed?listType=search&list=مهرجانات"></iframe>
-            </div>
-            <div class="controls-row">
-                <input type="text" placeholder="بحث في القناة A..." style="background:#222; border:1px solid #444; color:white; padding:5px; border-radius:4px; font-size: 0.8rem;">
-                <div class="label">LEVEL A</div>
-                <input type="range" min="0" max="100" value="80">
-            </div>
+    <div class="browser-container">
+        <div class="browser-pane">
+            <div class="fallback-msg">جاري تحميل يوتيوب الرئيسي (A)...</div>
+            <iframe src="https://www.youtube.com"></iframe>
         </div>
 
-        <div class="center-section">
-            <div class="label">CROSSFADER</div>
-            <input type="range" min="0" max="100" value="50">
-            <button class="btn-stop">STOP ALL</button>
-        </div>
+        <div class="divider"></div>
 
-        <div class="deck">
-            <div class="video-slot">
-                <iframe src="https://www.youtube.com/embed?listType=search&list=شعبي"></iframe>
-            </div>
-            <div class="controls-row">
-                <input type="text" placeholder="بحث في القناة B..." style="background:#222; border:1px solid #444; color:white; padding:5px; border-radius:4px; font-size: 0.8rem;">
-                <div class="label">LEVEL B</div>
-                <input type="range" min="0" max="100" value="80">
-            </div>
+        <div class="browser-pane">
+            <div class="fallback-msg">جاري تحميل يوتيوب الرئيسي (B)...</div>
+            <iframe src="https://www.youtube.com"></iframe>
         </div>
     </div>
 
