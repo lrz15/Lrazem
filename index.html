@@ -2,107 +2,150 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دي جي شواحة - النسخة الاحترافية</title>
+    <title>DJ Mixer Pro+ | أوتوماتيك ألبوماتي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #ff4141; --bg: #0a0a0a; --panel: #1a1a1a; }
-        body { background: var(--bg); color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .mixer-container { display: flex; gap: 10px; background: #111; padding: 15px; border-radius: 15px; width: 100%; max-width: 900px; }
-        .deck { background: var(--panel); padding: 10px; border-radius: 10px; flex: 1; text-align: center; }
-        .video-slot { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px; margin-bottom: 10px; pointer-events: none; }
-        .controls { display: flex; justify-content: center; gap: 15px; margin-top: 10px; }
-        .btn { background: #333; border: none; color: white; padding: 10px; border-radius: 50%; cursor: pointer; width: 40px; height: 40px; }
-        .btn:hover { background: var(--accent); }
-        .label { font-size: 0.7rem; color: #888; margin-top: 5px; }
-        input[type="range"] { width: 80%; accent-color: var(--accent); }
-        .center-section { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 60px; gap: 20px; }
+        /* (نفس تنسيقات الكود السابق مع إضافة بسيطة للتحميل) */
+        :root { --bg-main: #0a0e14; --deck-bg: #161b22; --accent-neon: #00f2ff; --accent-pink: #ff007a; --text-color: #e6edf3; }
+        body { margin: 0; font-family: 'Cairo', sans-serif; background-color: var(--bg-main); color: var(--text-color); display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .mixer-wrap { background: #1d2127; padding: 30px; border-radius: 25px; border: 1px solid #30363d; }
+        .decks-row { display: flex; gap: 30px; align-items: center; }
+        .deck { width: 280px; background: var(--deck-bg); border-radius: 20px; padding: 20px; text-align: center; border-bottom: 6px solid var(--accent-neon); }
+        .disc { width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle, #333, #000); margin: 15px auto; animation: spin 3s linear infinite paused; border: 4px solid #222; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .fader-section { margin: 20px 0; text-align: center; background: #161b22; padding: 15px; border-radius: 50px; }
+        .crossfader { width: 300px; accent-color: var(--accent-neon); cursor: pointer; }
+        .playlist-deck { width: 700px; background: var(--deck-bg); padding: 25px; border-radius: 15px; margin-top: 30px; }
+        .song-row { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #222; cursor: pointer; transition: 0.2s; }
+        .song-row:hover { background: rgba(0, 242, 255, 0.1); }
+        .loading-pulse { animation: pulse 1.5s infinite; color: var(--accent-neon); text-align: center; display: none; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        button { background: #30363d; border: none; color: white; padding: 10px; border-radius: 5px; cursor: pointer; font-family: 'Cairo'; }
     </style>
 </head>
 <body>
 
-    <h1>🎧 دي جي شواحة</h1>
+    <h1>🎧 دي جي شواحة PRO - النسخة الذكية 🎧</h1>
 
-    <div class="mixer-container">
-        <div class="deck">
-            <div id="playerA" class="video-slot"></div>
-            <div class="controls">
-                <button class="btn" onclick="prev('A')">⏮</button>
-                <button class="btn" onclick="playPause('A')">⏯</button>
-                <button class="btn" onclick="next('A')">⏭</button>
+    <div class="mixer-wrap">
+        <div class="decks-row">
+            <div class="deck">
+                <h3 id="nameA">TRACK A</h3>
+                <div id="discA" class="disc"></div>
+                <audio id="audioA"></audio>
+                <button onclick="toggle('A')">PLAY / PAUSE</button>
             </div>
-            <div class="label">LEVEL A</div>
-            <input type="range" oninput="setVolume('A', this.value)" min="0" max="100" value="100">
-        </div>
-
-        <div class="center-section">
-            <div class="label">MIX</div>
-            <input type="range" style="transform: rotate(-90deg); width: 80px;" min="0" max="100" value="50">
-        </div>
-
-        <div class="deck">
-            <div id="playerB" class="video-slot"></div>
-            <div class="controls">
-                <button class="btn" onclick="prev('B')">⏮</button>
-                <button class="btn" onclick="playPause('B')">⏯</button>
-                <button class="btn" onclick="next('B')">⏭</button>
+            <div class="deck" style="border-bottom-color: var(--accent-pink);">
+                <h3 id="nameB">TRACK B</h3>
+                <div id="discB" class="disc"></div>
+                <audio id="audioB"></audio>
+                <button onclick="toggle('B')">PLAY / PAUSE</button>
             </div>
-            <div class="label">LEVEL B</div>
-            <input type="range" oninput="setVolume('B', this.value)" min="0" max="100" value="100">
+        </div>
+        <div class="fader-section">
+            <input type="range" id="crossfader" class="crossfader" min="0" max="1" step="0.01" value="0.5" oninput="applyMix()">
         </div>
     </div>
 
-    <script src="https://www.youtube.com/iframe_api"></script>
+    <div class="playlist-deck">
+        <div style="display:flex; justify-content: space-between;">
+            <h3>🔥 تريندات ألبوماتي (تحديث تلقائي)</h3>
+            <button onclick="fetchAlbumatyTrends()" style="background: var(--accent-neon); color:black;">تحديث القائمة 🔄</button>
+        </div>
+        <div id="loading" class="loading-pulse">جاري سحب التريندات الحالية من ألبوماتي...</div>
+        <div id="trendingList">
+            </div>
+    </div>
 
     <script>
-        let playerA, playerB;
-        
-        // قوائم التشغيل (ضع الـ ID الخاص بالفيديوهات هنا)
-        const playlistA = ["dQw4w9WgXcQ", "jNQXAC9IVRw", "9bZkp7q19f0"];
-        const playlistB = ["kJQP7kiw5Fk", "L_jWHffIx5E", "hT_nvWreIhg"];
-        
-        let indexA = 0, indexB = 0;
+        const audioA = document.getElementById('audioA');
+        const audioB = document.getElementById('audioB');
 
-        function onYouTubeIframeAPIReady() {
-            playerA = new YT.Player('playerA', {
-                height: '100%', width: '100%',
-                videoId: playlistA[0],
-            });
-            playerB = new YT.Player('playerB', {
-                height: '100%', width: '100%',
-                videoId: playlistB[0],
-            });
-        }
+        // وظيفة جلب البيانات أوتوماتيكياً
+        async function fetchAlbumatyTrends() {
+            const listContainer = document.getElementById('trendingList');
+            const loader = document.getElementById('loading');
+            
+            listContainer.innerHTML = "";
+            loader.style.display = "block";
 
-        function playPause(deck) {
-            const p = deck === 'A' ? playerA : playerB;
-            if (p.getPlayerState() === 1) p.pauseVideo();
-            else p.playVideo();
-        }
+            try {
+                // نستخدم Proxy لكسر حماية المتصفح وجلب محتوى ألبوماتي
+                const proxyUrl = "https://api.allorigins.win/get?url=";
+                const targetUrl = encodeURIComponent("https://www.albumaty.com/");
+                
+                const response = await fetch(proxyUrl + targetUrl);
+                const data = await response.json();
+                
+                // تحويل النص المستلم إلى HTML للتعامل معه
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data.contents, 'text/html');
+                
+                // البحث عن الأغاني في الصفحة (تغيير الـ Selectors حسب تصميم الموقع)
+                const songs = doc.querySelectorAll('.song-item, .trending-song, a[href*="song"]');
+                
+                let count = 0;
+                songs.forEach(song => {
+                    if(count < 10 && song.innerText.trim().length > 5) {
+                        const name = song.innerText.replace("تحميل", "").trim();
+                        const link = song.href || "#";
+                        
+                        addSongRow(name, link);
+                        count++;
+                    }
+                });
 
-        function next(deck) {
-            if (deck === 'A') {
-                indexA = (indexA + 1) % playlistA.length;
-                playerA.loadVideoById(playlistA[indexA]);
-            } else {
-                indexB = (indexB + 1) % playlistB.length;
-                playerB.loadVideoById(playlistB[indexB]);
+                if(count === 0) {
+                    // في حال فشل السكرابينج، نضع قائمة احتياطية ذكية
+                    fallbackTrends();
+                }
+
+            } catch (error) {
+                console.error("خطأ في الجلب:", error);
+                fallbackTrends();
+            } finally {
+                loader.style.display = "none";
             }
         }
 
-        function prev(deck) {
-            if (deck === 'A') {
-                indexA = (indexA - 1 + playlistA.length) % playlistA.length;
-                playerA.loadVideoById(playlistA[indexA]);
-            } else {
-                indexB = (indexB - 1 + playlistB.length) % playlistB.length;
-                playerB.loadVideoById(playlistB[indexB]);
-            }
+        function addSongRow(name, url) {
+            const container = document.getElementById('trendingList');
+            const div = document.createElement('div');
+            div.className = 'song-row';
+            div.innerHTML = `<span>🎵 ${name}</span> <small>اضغط للميكس</small>`;
+            div.onclick = () => {
+                const choice = confirm(`تحميل "${name}" في Deck A؟\n\n(OK = A | Cancel = B)`);
+                // تحويل رابط الصفحة لرابط MP3 تقريبي (يعتمد على هيكلة خوادمهم)
+                const mp3Url = url.replace("song/", "download/").replace(".html", ".mp3"); 
+                if(choice) { audioA.src = mp3Url; document.getElementById('nameA').innerText = name; }
+                else { audioB.src = mp3Url; document.getElementById('nameB').innerText = name; }
+            };
+            container.appendChild(div);
         }
 
-        function setVolume(deck, vol) {
-            const p = deck === 'A' ? playerA : playerB;
-            p.setVolume(vol);
+        function fallbackTrends() {
+            const container = document.getElementById('trendingList');
+            container.innerHTML = "<p style='text-align:center; color:#888;'>تعذر الاتصال المباشر، تم تحميل قائمة الطوارئ.</p>";
+            const backup = [
+                {n: "مهرجان التريند الحالي 1", u: "https://server1.albumaty.com/songs/trend1.mp3"},
+                {n: "أغنية المطعم المفضلة", u: "https://server1.albumaty.com/songs/trend2.mp3"}
+            ];
+            backup.forEach(s => addSongRow(s.n, s.u));
         }
+
+        function toggle(deck) {
+            const a = (deck === 'A') ? audioA : audioB;
+            const d = (deck === 'A') ? discA : discB;
+            a.paused ? (a.play(), d.style.animationPlayState = 'running') : (a.pause(), d.style.animationPlayState = 'paused');
+        }
+
+        function applyMix() {
+            const f = document.getElementById('crossfader').value;
+            audioA.volume = 1 - f;
+            audioB.volume = f;
+        }
+
+        window.onload = fetchAlbumatyTrends;
     </script>
 </body>
 </html>
