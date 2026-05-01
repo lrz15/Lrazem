@@ -2,144 +2,351 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ashes Studio - الرئيسية</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Ashes Studio | دي جي شواحة - الرئيسية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            /* إضافة صورة الهيرو كخلفية */
-            background-image: url('hero.png'); 
-            background-size: cover; /* تجعل الصورة تغطي الصفحة بالكامل */
-            background-position: center; /* تمركز الصورة */
-            background-repeat: no-repeat;
-            background-attachment: fixed; /* تثبيت الخلفية عند التمرير */
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative; /* ضروري لطبقة التعتيم */
+            box-sizing: border-box;
         }
 
-        /* طبقة تعتيم فوق الصورة لبروز النص */
+        body {
+            min-height: 100vh;
+            background: #0a0c12;
+            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Cairo', sans-serif;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* خلفية مع تأثير أقراص دوارة متحركة */
         body::before {
             content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7); /* لون أسود بشفافية 70% */
-            z-index: 1;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('hero.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: brightness(0.25) blur(6px);
+            z-index: 0;
         }
 
-        /* جعل المحتوى فوق طبقة التعتيم */
+        /* إضافة نمط شبكي ديناميكي وموجات صوتية */
+        .dj-bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 40%, rgba(29,185,84,0.08) 0%, rgba(0,0,0,0.7) 90%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* تأثير أقراص دوارة خلفية */
+        .vinyl-bg {
+            position: fixed;
+            bottom: -20%;
+            right: -15%;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #1a1a2e, #0a0a14);
+            opacity: 0.15;
+            z-index: 1;
+            pointer-events: none;
+            animation: spinSlow 40s linear infinite;
+            box-shadow: 0 0 80px rgba(0,255,170,0.2);
+        }
+
+        .vinyl-bg::after {
+            content: "♫";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 70px;
+            color: #1db954;
+            opacity: 0.3;
+        }
+
+        .vinyl-bg2 {
+            left: -15%;
+            top: -20%;
+            width: 500px;
+            height: 500px;
+            animation: spinSlow 60s reverse linear infinite;
+            opacity: 0.1;
+        }
+
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* المحتوى الرئيسي */
         .content-wrapper {
             position: relative;
-            z-index: 2;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 20px;
+            backdrop-filter: blur(2px);
         }
 
-        h1 {
-            font-size: 4rem; /* تكبير العنوان قليلاً */
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 8px;
-            color: #fff;
-            text-shadow: 0 0 15px #1db954, 0 0 30px #1db954; /* تعزيز تأثير النيون */
+        /* الشعار مع تأثير نيون متقطع */
+        .logo-container h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #FFFFFF, #1db954, #ffd966);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px #1db95480, 0 0 40px #1db95440;
+            animation: titlePulse 2s ease-in-out infinite;
+            margin-bottom: 0.5rem;
         }
 
-        p {
+        @keyframes titlePulse {
+            0% { text-shadow: 0 0 10px #1db95480, 0 0 20px #ffd96640; opacity: 1; }
+            50% { text-shadow: 0 0 30px #1db954, 0 0 60px #ffaa44; opacity: 0.95; }
+            100% { text-shadow: 0 0 10px #1db95480, 0 0 20px #ffd96640; opacity: 1; }
+        }
+
+        .tagline {
             font-size: 1.3rem;
-            color: #ccc; /* تفتيح لون الوصف */
-            margin-top: 15px;
             font-weight: 300;
+            color: #ddd;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
+        .tagline span {
+            background: rgba(0,0,0,0.5);
+            padding: 5px 15px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+            font-size: 0.9rem;
+        }
+
+        /* مؤشر BPM وهمي */
+        .bpm-indicator {
+            margin: 20px auto;
+            width: fit-content;
+            background: rgba(0,0,0,0.6);
+            padding: 8px 24px;
+            border-radius: 60px;
+            border-left: 3px solid #1db954;
+            font-family: monospace;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            backdrop-filter: blur(5px);
+        }
+
+        .bpm-indicator i {
+            color: #1db954;
+            margin-left: 8px;
+        }
+
+        .bpm-value {
+            font-weight: bold;
+            color: #ffd966;
+            animation: blinkBpm 1s step-end infinite;
+        }
+
+        @keyframes blinkBpm {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* أزرار الأقراص (مستوحاة من الـ DJ Decks) */
         .menu {
             display: flex;
-            gap: 25px;
-            margin-top: 50px;
+            gap: 40px;
             justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 50px;
         }
 
-        .btn {
+        .dj-btn {
             text-decoration: none;
-            padding: 18px 40px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 50px;
-            transition: 0.4s ease-in-out;
-            border: 2px solid transparent;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
+            gap: 15px;
+            width: 220px;
+            padding: 25px 15px;
+            border-radius: 60px;
+            background: rgba(20, 25, 40, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,215,0,0.3);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        }
+
+        .dj-btn i {
+            font-size: 3rem;
+            transition: transform 0.2s;
+        }
+
+        .dj-btn span {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
         }
 
         .btn-primary {
-            background: #1db954;
-            color: #000;
-            box-shadow: 0 5px 15px rgba(29, 185, 84, 0.3);
+            background: linear-gradient(145deg, #1db954, #0f8b3a);
+            border: none;
+            box-shadow: 0 0 15px #1db95480;
+        }
+
+        .btn-primary i, .btn-primary span {
+            color: #fff;
+            text-shadow: 0 1px 2px black;
         }
 
         .btn-primary:hover {
-            background: transparent;
-            color: #1db954;
-            border-color: #1db954;
+            transform: scale(1.05) translateY(-6px);
             box-shadow: 0 0 30px #1db954;
-            transform: translateY(-3px); /* حركة خفيفة للأعلى */
+            background: linear-gradient(145deg, #2ecc71, #1aa34a);
+        }
+
+        .btn-primary:hover i {
+            transform: rotate(10deg) scale(1.1);
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.1); /* خلفية نصف شفافة */
-            color: #fff;
-            border-color: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(5px); /* تأثير تضبيب خلف الزر */
+            background: rgba(0,0,0,0.6);
+            border: 1px solid #ffd966;
+        }
+
+        .btn-secondary i, .btn-secondary span {
+            color: #ffd966;
         }
 
         .btn-secondary:hover {
-            background: #fff;
-            color: #000;
+            background: #ffd966;
             border-color: #fff;
-            transform: translateY(-3px);
+            transform: scale(1.05) translateY(-6px);
+        }
+
+        .btn-secondary:hover i, .btn-secondary:hover span {
+            color: #1e1e2a;
+        }
+
+        .btn-secondary:hover i {
+            transform: rotate(-5deg) scale(1.1);
+        }
+
+        /* عناصر زخرفية جانبية (سماعات / أقراص صغيرة) */
+        .decor-equalizer {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 6px;
+            align-items: flex-end;
+            z-index: 5;
+            opacity: 0.6;
+        }
+
+        .decor-equalizer .bar {
+            width: 5px;
+            background: #1db954;
+            border-radius: 4px;
+            animation: equalize 1.2s ease-in-out infinite alternate;
+        }
+
+        .bar:nth-child(1) { height: 15px; animation-duration: 0.8s; }
+        .bar:nth-child(2) { height: 30px; animation-duration: 1s; }
+        .bar:nth-child(3) { height: 20px; animation-duration: 0.6s; }
+        .bar:nth-child(4) { height: 40px; animation-duration: 1.3s; }
+        .bar:nth-child(5) { height: 25px; animation-duration: 0.9s; }
+
+        @keyframes equalize {
+            0% { height: 5px; opacity: 0.4; }
+            100% { height: 40px; opacity: 1; }
         }
 
         .footer {
-            position: absolute;
-            bottom: 20px;
+            position: fixed;
+            bottom: 15px;
             width: 100%;
             text-align: center;
-            font-size: 0.9rem;
-            color: #666;
-            z-index: 2;
+            font-size: 0.75rem;
+            color: #aaa;
+            z-index: 10;
+            background: rgba(0,0,0,0.4);
+            padding: 5px;
+            backdrop-filter: blur(4px);
+        }
+
+        /* توافق الجوال */
+        @media (max-width: 700px) {
+            .logo-container h1 { font-size: 2.2rem; letter-spacing: 3px; }
+            .dj-btn { width: 180px; padding: 18px 10px; }
+            .dj-btn i { font-size: 2rem; }
+            .menu { gap: 20px; }
+            .vinyl-bg { width: 300px; height: 300px; bottom: -10%; right: -20%; }
         }
     </style>
 </head>
 <body>
 
+    <div class="dj-bg-overlay"></div>
+    <div class="vinyl-bg"></div>
+    <div class="vinyl-bg vinyl-bg2"></div>
+
+    <div class="decor-equalizer">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </div>
+
     <div class="content-wrapper">
         <div class="logo-container">
             <h1>ASHES STUDIO</h1>
-            <p>مرحباً بك في عالم الموسيقى السحابية</p>
+            <div class="tagline">
+                <span><i class="fas fa-headphones"></i> دي جي شواحة</span>
+                <span><i class="fas fa-cloud-upload-alt"></i> سحابة الموسيقى</span>
+            </div>
+        </div>
+
+        <div class="bpm-indicator">
+            <i class="fas fa-waveform"></i> BPM READY • <span class="bpm-value">120</span> BPM
         </div>
 
         <div class="menu">
-            <a href="dj-player.html" class="btn btn-primary">
-                🎧 دخول استوديو دي جي شواحة
+            <a href="dj-player.html" class="dj-btn btn-primary">
+                <i class="fas fa-sliders-h"></i>
+                <span>🎧 استوديو الدي جي</span>
+                <small style="font-size: 0.7rem; opacity:0.8;">Crossfader • Video Mix</small>
             </a>
             
-            <a href="add-song.html" class="btn btn-secondary">
-                ➕ إضافة أغاني جديدة
+            <a href="add-song.html" class="dj-btn btn-secondary">
+                <i class="fas fa-plus-circle"></i>
+                <span>➕ مكتبة جديدة</span>
+                <small style="font-size: 0.7rem;">رفع أغاني • كليبات</small>
             </a>
         </div>
     </div>
 
     <div class="footer">
-        © 2026 ASHES STUDIO - ALL RIGHTS RESERVED
-    </div>
-
-</body>
-</html>
+        <i class="fas fa-copyright"></i> 2026 ASHES STUDIO — دي جي شواحة | جميع الحقوق محفوظة
     </div>
 
 </body>
