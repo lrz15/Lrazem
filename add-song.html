@@ -3,101 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إضافة أغنية - add-song.html</title>
+    <title>إضافة أغنية لـ Ashes Studio</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #121212; 
-            color: white; 
-            padding: 20px; 
-            text-align: center; 
-        }
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            background: #1e1e1e;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-        h2 { color: #1db954; margin-bottom: 25px; }
-        input { 
-            width: 100%; 
-            padding: 12px; 
-            margin: 10px 0; 
-            border-radius: 8px; 
-            border: 1px solid #333; 
-            background: #282828; 
-            color: white;
-            box-sizing: border-box;
-        }
-        button { 
-            width: 100%;
-            padding: 12px; 
-            margin-top: 20px;
-            background: #1db954; 
-            color: white; 
-            border: none; 
-            border-radius: 25px; 
-            cursor: pointer; 
-            font-weight: bold;
-            font-size: 16px;
-            transition: 0.3s;
-        }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { max-width: 450px; width: 90%; background: #1e1e1e; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
+        h2 { color: #1db954; margin-bottom: 20px; }
+        .preview-img { width: 100%; height: 200px; background: #282828; border-radius: 12px; margin-bottom: 20px; object-fit: cover; border: 2px dashed #444; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #282828; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 14px; margin-top: 20px; background: #1db954; color: white; border: none; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
         button:hover { background: #1ed760; transform: scale(1.02); }
+        .status { margin-top: 15px; font-size: 0.9rem; color: #aaa; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>إضافة أغنية جديدة</h2>
+        <h2>إضافة أغنية للمكتبة</h2>
+        
+        <img id="imagePreview" class="preview-img" src="https://via.placeholder.com/400x225?text=Preview+Image" alt="معاينة الغلاف">
+        
+        <input type="text" id="songUrl" placeholder="ضع رابط يوتيوب هنا">
         <input type="text" id="songTitle" placeholder="اسم الأغنية">
         <input type="text" id="songArtist" placeholder="اسم الفنان">
-        <input type="text" id="songImage" placeholder="رابط صورة الغلاف (URL)">
-        <input type="text" id="songUrl" placeholder="رابط ملف الأغنية (URL)">
-        
-        <button id="uploadBtn">نشر الأغنية في المكتبة</button>
+        <input type="hidden" id="songImage"> <button id="uploadBtn">نشر الأغنية في Ashes Studio</button>
+        <p id="statusMsg" class="status"></p>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyAskiLw4M7EWxz1i-1REQUsGejAL3mQ44A",
             authDomain: "ashes-studio.firebaseapp.com",
             projectId: "ashes-studio",
-            storageBucket: "ashes-studio.firebasestorage.app",
-            messagingSenderId: "724089429725",
-            appId: "1:724089429725:web:4f1031dc4c72cefff60534",
-            measurementId: "G-H38F13MK9F"
+            databaseURL: "https://ashes-studio-default-rtdb.firebaseio.com",
+            appId: "1:724089429725:web:4f1031dc4c72cefff60534"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
+        const urlInput = document.getElementById('songUrl');
+        const imgPreview = document.getElementById('imagePreview');
+        const songImageInput = document.getElementById('songImage');
+
+        // وظيفة استخراج ID يوتيوب
+        function getYoutubeId(url) {
+            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?v=))([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[7].length === 11) ? match[7] : null;
+        }
+
+        // جلب الغلاف تلقائياً عند وضع الرابط
+        urlInput.oninput = function() {
+            const videoId = getYoutubeId(this.value);
+            if (videoId) {
+                const thumbUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+                imgPreview.src = thumbUrl;
+                songImageInput.value = thumbUrl;
+            }
+        };
+
+        // الرفع لـ Firebase
         document.getElementById('uploadBtn').onclick = function() {
             const title = document.getElementById('songTitle').value;
             const artist = document.getElementById('songArtist').value;
-            const image = document.getElementById('songImage').value;
-            const url = document.getElementById('songUrl').value;
+            const videoId = getYoutubeId(urlInput.value);
+            const cover = songImageInput.value;
 
-            if(title && url) {
+            if (title && videoId) {
+                document.getElementById('statusMsg').innerText = "جاري الحفظ...";
+                
                 push(ref(db, 'songs'), {
                     title: title,
                     artist: artist,
-                    cover: image,
-                    link: url,
+                    cover: cover,
+                    link: videoId, // نحفظ الـ ID فقط
                     timestamp: Date.now()
                 }).then(() => {
-                    alert("تم الحفظ بنجاح في Ashes Studio!");
-                    document.querySelectorAll('input').forEach(input => input.value = '');
-                }).catch((error) => {
-                    alert("خطأ في الاتصال: " + error.message);
+                    alert("تمت الإضافة بنجاح!");
+                    location.reload(); // إعادة تحميل الصفحة لتنظيف الحقول
+                }).catch(err => {
+                    alert("حدث خطأ: " + err.message);
                 });
             } else {
-                alert("لطفاً، أدخل اسم الأغنية والرابط");
+                alert("يرجى التأكد من وضع رابط يوتيوب واسم الأغنية");
             }
         };
     </script>
