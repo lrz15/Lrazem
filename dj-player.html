@@ -2,328 +2,173 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دي جي شواحة - Ashes Studio PRO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>دي جي شواحة | مشغل يوتيوب مزدوج - نسخة عملاقة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root { --neon-green: #1db954; --bg-dark: #0a0a0a; --panel-bg: #161616; }
-        body { background: var(--bg-dark); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        
-        .dj-header { text-align: center; margin-bottom: 20px; }
-        .dj-name { font-size: 2.8rem; font-weight: bold; text-shadow: 0 0 15px var(--neon-green); letter-spacing: 3px; margin: 0; }
-        .studio-tag { color: var(--neon-green); font-size: 0.9rem; letter-spacing: 5px; }
-
-        /* توزيع الواجهة: Side by Side */
-        .main-container { display: flex; align-items: stretch; justify-content: center; gap: 15px; width: 100%; max-width: 1250px; margin-top: 10px; }
-
-        .deck { flex: 1; background: var(--panel-bg); border: 2px solid #333; border-radius: 25px; padding: 20px; text-align: center; box-shadow: 0 10px 30px #000; position: relative; }
-        
-        /* المكسر الأوسط */
-        .center-mixer { width: 140px; background: #111; border: 2px solid #333; border-radius: 15px; display: flex; flex-direction: column; align-items: center; padding: 15px 5px; justify-content: space-between; }
-
-        .turntable { width: 140px; height: 140px; background: radial-gradient(circle, #222 15%, #000 100%); border: 6px solid #333; border-radius: 50%; margin: 0 auto 15px; position: relative; transition: transform 0.5s; }
-        .turntable::after { content: ""; position: absolute; top: 50%; left: 50%; width: 25px; height: 25px; background: var(--neon-green); border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 10px var(--neon-green); }
-        .rotating { animation: rotate 3s linear infinite; }
-
-        .track-info { background: #000; color: var(--neon-green); padding: 5px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; height: 20px; margin-bottom: 10px; border: 1px solid #222; overflow: hidden; }
-        
-        .progress-box { margin-bottom: 10px; }
-        .time-txt { font-size: 11px; color: #777; margin-bottom: 3px; display: block; }
-        input[type="range"] { width: 100%; accent-color: var(--neon-green); cursor: pointer; }
-
-        /* مكسر عمودي وفيدرات */
-        .v-slider { writing-mode: bt-lr; -webkit-appearance: slider-vertical; width: 10px; height: 180px; accent-color: var(--neon-green); }
-        .mixer-label { font-size: 10px; color: #666; margin: 5px 0; }
-
-        /* أزرار الانتقال الذكي */
-        .auto-transition-unit { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
-        .fx-btn { background: #222; border: 1px solid var(--neon-green); color: var(--neon-green); padding: 8px; border-radius: 5px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .fx-btn:hover { background: var(--neon-green); color: #000; }
-        .fx-btn.active { background: #ff4444; color: #fff; border-color: #ff4444; }
-
-        .btn-group { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-        .play-btn { background: #1db954; color: #000; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; flex: 1; }
-        .stop-btn { background: #333; color: #fff; border: none; padding: 10px 10px; border-radius: 5px; cursor: pointer; }
-
-        /* البحث في الأسفل */
-        .search-area { margin-top: 25px; }
-        .search-trigger { background: var(--neon-green); color: #000; border: none; padding: 15px 60px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px rgba(29, 185, 84, 0.4); }
-
-        #searchModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; }
-        .modal-content { background: #1a1a1a; width: 90%; max-width: 450px; padding: 25px; border-radius: 20px; border: 1px solid var(--neon-green); max-height: 70vh; overflow-y: auto; }
-        .song-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #222; }
-        .song-item button { background: #333; color: #fff; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; margin-left: 5px; }
-
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @media (max-width: 800px) { .main-container { flex-direction: column; align-items: center; } .center-mixer { width: 90%; height: auto; flex-direction: row; } .v-slider { height: 100px; } }
+        *{margin:0;padding:0;box-sizing:border-box;user-select:none;}
+        body{background:linear-gradient(145deg,#0a0f1e,#0c1222);font-family:'Cairo',sans-serif;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;}
+        .dj-container{max-width:1400px;width:100%;background:rgba(10,14,23,0.75);backdrop-filter:blur(10px);border-radius:48px;box-shadow:0 25px 45px rgba(0,0,0,0.5),inset 0 1px 1px rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:20px 25px 30px;}
+        .studio-header{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;margin-bottom:30px;padding-bottom:15px;border-bottom:2px solid rgba(255,255,255,0.1);}
+        .logo{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,#FFD966,#FF8C42);-webkit-background-clip:text;background-clip:text;color:transparent;}
+        .dj-name{font-size:1.3rem;font-weight:600;background:rgba(255,255,240,0.1);padding:6px 20px;border-radius:40px;color:#f0f0f0;}
+        .cloud-lib{font-size:0.9rem;color:#aaa;display:flex;align-items:center;gap:8px;}
+        .decks-wrapper{display:flex;flex-wrap:wrap;gap:20px;margin-bottom:30px;}
+        .deck{flex:1;min-width:280px;background:rgba(0,0,0,0.45);border-radius:32px;padding:18px 15px 20px;backdrop-filter:blur(4px);box-shadow:0 8px 20px rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);}
+        .deck h3{color:#ffd966;font-weight:700;margin-bottom:12px;font-size:1.3rem;display:flex;align-items:center;gap:10px;justify-content:center;}
+        .video-wrapper{position:relative;width:100%;border-radius:24px;overflow:hidden;aspect-ratio:16/9;background:#000;box-shadow:0 10px 25px rgba(0,0,0,0.5);margin-bottom:15px;border:2px solid rgba(255,255,200,0.2);}
+        .video-wrapper iframe{width:100%;height:100%;}
+        .time-info{direction:ltr;text-align:center;background:#00000066;padding:8px;border-radius:60px;font-family:monospace;font-size:1rem;font-weight:bold;color:#0ff;text-shadow:0 0 3px cyan;margin:10px 0;}
+        .volume-control{display:flex;align-items:center;gap:12px;margin:12px 0;background:rgba(30,30,50,0.6);padding:8px 12px;border-radius:40px;}
+        .volume-control label{font-size:0.85rem;color:#ccc;}
+        input[type="range"]{flex:1;height:5px;-webkit-appearance:none;background:#3a3f5e;border-radius:5px;}
+        input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#ffaa44;cursor:pointer;box-shadow:0 0 6px gold;}
+        .btn-group{display:flex;justify-content:center;gap:15px;margin-top:12px;}
+        .btn-icon{background:rgba(20,25,45,0.9);border:none;color:white;font-size:1rem;padding:8px 16px;border-radius:60px;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:8px;font-weight:600;border:1px solid rgba(255,215,0,0.3);}
+        .btn-icon:hover{background:#ffaa33;color:#1e1e2a;transform:scale(1.02);}
+        .mixer-panel{background:rgba(0,0,0,0.5);border-radius:60px;padding:18px 25px;margin-top:15px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px;backdrop-filter:blur(8px);border:1px solid rgba(255,200,100,0.3);}
+        .crossfader-area{flex:2;min-width:180px;text-align:center;}
+        .crossfader-area label{display:block;font-size:0.8rem;color:#ffbb77;margin-bottom:5px;}
+        .crossfader{width:100%;}
+        .global-controls{display:flex;gap:20px;flex-wrap:wrap;}
+        .big-btn{padding:12px 24px;font-size:1.1rem;}
+        .sync-btn{background:#1f2a3e;border-color:#33ffcc;color:#aaffdd;}
+        .sync-btn:hover{background:#33ffcc;color:#0a0f1e;}
+        .footer-note{text-align:center;margin-top:25px;font-size:0.8rem;color:#aaa;border-top:1px dashed #333;padding-top:18px;}
+        .url-input{display:flex;gap:8px;margin-top:12px;background:#00000055;padding:5px 10px;border-radius:60px;}
+        .url-input input{flex:1;background:#1e1f2c;border:none;padding:6px 12px;border-radius:40px;color:white;font-size:0.7rem;}
+        .url-input button{background:none;border:1px solid #ffaa44;color:#ffaa44;border-radius:30px;padding:4px 12px;cursor:pointer;}
+        @media (max-width:850px){.dj-container{padding:15px;}}
     </style>
 </head>
 <body>
-
-    <div class="dj-header">
-        <div class="studio-tag">ASHES STUDIO</div>
-        <h1 class="dj-name">دي جي شواحة</h1>
+<div class="dj-container">
+    <div class="studio-header">
+        <div class="logo">🎧 ASHES STUDIO</div>
+        <div class="dj-name"><i class="fas fa-headphones"></i> دي جي شواحة</div>
+        <div class="cloud-lib"><i class="fas fa-cloud-music"></i> مكتبة الأغاني السحابية</div>
     </div>
-
-    <div class="main-container">
-        <div class="deck" id="panel-a">
-            <div class="turntable" id="disc-a"></div>
-            <div class="track-info" id="info-a">قيد الانتظار A...</div>
-            
-            <div class="progress-box">
-                <span class="time-txt" id="time-a">00:00 / 00:00</span>
-                <input type="range" id="progress-a" min="0" max="100" value="0">
-            </div>
-
-            <div class="btn-group">
-                <button class="play-btn" onclick="togglePlay('a')">PLAY / PAUSE</button>
-                <button class="stop-btn" onclick="stopDeck('a')">■</button>
-            </div>
-            <audio id="audio-a" crossorigin="anonymous"></audio>
+    <div class="decks-wrapper">
+        <!-- القناة اليسرى A -->
+        <div class="deck">
+            <h3><i class="fab fa-youtube"></i> القناة A | يوتيوب 1</h3>
+            <div class="video-wrapper" id="playerLeftWrapper"><div id="playerLeft"></div></div>
+            <div class="time-info" id="timeLeft">00:00 / 00:00</div>
+            <div class="volume-control"><label><i class="fas fa-volume-down"></i> VOL A</label><input type="range" id="volLeft" min="0" max="100" value="100"><span id="volLeftVal">100%</span></div>
+            <div class="btn-group"><button class="btn-icon" id="playLeft"><i class="fas fa-play"></i> تشغيل</button><button class="btn-icon" id="pauseLeft"><i class="fas fa-pause"></i> إيقاف</button></div>
+            <div class="url-input"><i class="fab fa-youtube" style="color:#ff4444;"></i><input type="text" id="leftUrl" placeholder="رابط أو ID فيديو" value="dQw4w9WgXcQ"><button id="loadLeft">تحميل</button></div>
         </div>
-
-        <div class="center-mixer">
-            <div style="display:flex; gap: 15px;">
-                <div style="text-align:center">
-                    <div class="mixer-label">VOL A</div>
-                    <input type="range" class="v-slider" id="fader-a" min="0" max="1" step="0.01" value="0.8">
-                </div>
-                <div style="text-align:center">
-                    <div class="mixer-label">VOL B</div>
-                    <input type="range" class="v-slider" id="fader-b" min="0" max="1" step="0.01" value="0.8">
-                </div>
-            </div>
-
-            <div class="auto-transition-unit">
-                <div class="mixer-label" style="color:var(--neon-green)">AUTO SYNC</div>
-                <button class="fx-btn" onclick="startTransition('fade')">FADE ⇄</button>
-                <button class="fx-btn" onclick="startTransition('riser')">RISER ⚡</button>
-                <button class="fx-btn" onclick="startTransition('sweep')">SWEEP 🌊</button>
-            </div>
-
-            <div style="width:100%; text-align:center">
-                <div class="mixer-label">CROSSFADER</div>
-                <input type="range" id="crossfader" min="-1" max="1" step="0.01" value="0" style="width: 100px;">
-            </div>
-        </div>
-
-        <div class="deck" id="panel-b">
-            <div class="turntable" id="disc-b"></div>
-            <div class="track-info" id="info-b">قيد الانتظار B...</div>
-            
-            <div class="progress-box">
-                <span class="time-txt" id="time-b">00:00 / 00:00</span>
-                <input type="range" id="progress-b" min="0" max="100" value="0">
-            </div>
-
-            <div class="btn-group">
-                <button class="play-btn" onclick="togglePlay('b')">PLAY / PAUSE</button>
-                <button class="stop-btn" onclick="stopDeck('b')">■</button>
-            </div>
-            <audio id="audio-b" crossorigin="anonymous"></audio>
+        <!-- القناة اليمنى B -->
+        <div class="deck">
+            <h3><i class="fab fa-youtube"></i> القناة B | يوتيوب 2</h3>
+            <div class="video-wrapper" id="playerRightWrapper"><div id="playerRight"></div></div>
+            <div class="time-info" id="timeRight">00:00 / 00:00</div>
+            <div class="volume-control"><label><i class="fas fa-volume-down"></i> VOL B</label><input type="range" id="volRight" min="0" max="100" value="100"><span id="volRightVal">100%</span></div>
+            <div class="btn-group"><button class="btn-icon" id="playRight"><i class="fas fa-play"></i> تشغيل</button><button class="btn-icon" id="pauseRight"><i class="fas fa-pause"></i> إيقاف</button></div>
+            <div class="url-input"><i class="fab fa-youtube" style="color:#ff4444;"></i><input type="text" id="rightUrl" placeholder="رابط أو ID فيديو" value="M7lc1UVf-VE"><button id="loadRight">تحميل</button></div>
         </div>
     </div>
-
-    <div class="search-area">
-        <button class="search-trigger" onclick="openSearch()">🔍 مكتبة الأغاني السحابية</button>
+    <div class="mixer-panel">
+        <div class="crossfader-area"><label><i class="fas fa-arrow-left"></i> CROSSFADER (انتقال صوتي) <i class="fas fa-arrow-right"></i></label><input type="range" id="crossfader" min="0" max="100" value="50" step="1"><div style="display:flex; justify-content:space-between; color:#ffaa77;"><span>قناة A</span><span>◄ مزج ►</span><span>قناة B</span></div></div>
+        <div class="global-controls"><button class="btn-icon big-btn" id="globalPlayPause"><i class="fas fa-play-circle"></i> تشغيل/إيقاف الكل</button><button class="btn-icon sync-btn" id="autoSync"><i class="fas fa-sync-alt"></i> AUTO SYNC (زامن A←B)</button></div>
     </div>
+    <div class="footer-note"><i class="fas fa-sliders-h"></i> التحكم بكل قناة بشكل منفصل + كروس فيدر لمزج الصوت بين الفيديوين</div>
+</div>
 
-    <div id="searchModal">
-        <div class="modal-content">
-            <h3 style="color:var(--neon-green); text-align:center;">مكتبة شواحة</h3>
-            <div id="songsList">جاري جلب السحابة...</div>
-            <br>
-            <button onclick="closeSearch()" style="width:100%; background:#333; color:#fff; border:none; padding:10px; border-radius:10px;">إغلاق</button>
-        </div>
-    </div>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+    let playerA, playerB;
+    let readyA = false, readyB = false;
+    let volAraw = 100, volBraw = 100, crossPos = 50;
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    // استخراج ID من رابط يوتيوب
+    function getYoutubeId(url) {
+        if(!url) return null;
+        if(url.length===11 && /^[a-zA-Z0-9_-]{11}$/.test(url)) return url;
+        let regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?v=))([^#&?]*).*/;
+        let match = url.match(regExp);
+        return (match&&match[7].length===11)? match[7] : null;
+    }
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAskiLw4M7EWxz1i-1REQUsGejAL3mQ44A",
-            authDomain: "ashes-studio.firebaseapp.com",
-            projectId: "ashes-studio",
-            storageBucket: "ashes-studio.firebasestorage.app",
-            messagingSenderId: "724089429725",
-            appId: "1:724089429725:web:4f1031dc4c72cefff60534"
-        };
+    // حساب الصوت النهائي بناءً على الكروس فيدر
+    function applyVolumeMix() {
+        if(!readyA || !readyB) return;
+        let mixA = (1 - (crossPos/100)) * (volAraw/100);
+        let mixB = (crossPos/100) * (volBraw/100);
+        let finalA = Math.min(100, Math.max(0, Math.floor(mixA * 100)));
+        let finalB = Math.min(100, Math.max(0, Math.floor(mixB * 100)));
+        playerA.setVolume(finalA);
+        playerB.setVolume(finalB);
+    }
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+    // أحداث التحكم
+    document.getElementById('volLeft').addEventListener('input', (e) => { volAraw = parseInt(e.target.value); document.getElementById('volLeftVal').innerText = volAraw+'%'; applyVolumeMix(); });
+    document.getElementById('volRight').addEventListener('input', (e) => { volBraw = parseInt(e.target.value); document.getElementById('volRightVal').innerText = volBraw+'%'; applyVolumeMix(); });
+    document.getElementById('crossfader').addEventListener('input', (e) => { crossPos = parseInt(e.target.value); applyVolumeMix(); });
 
-        let audioCtx;
-        const decks = {
-            a: { audio: null, source: null, gain: null, filter: null, playing: false, index: -1 },
-            b: { audio: null, source: null, gain: null, filter: null, playing: false, index: -1 }
-        };
-        let globalPlaylist = [];
-
-        // تهيئة الصوت عند أول ضغطة
-        function initAudio() {
-            if (audioCtx) return;
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            setupDeck('a');
-            setupDeck('b');
+    // أزرار التشغيل والإيقاف
+    document.getElementById('playLeft').onclick = () => { if(readyA) playerA.playVideo(); };
+    document.getElementById('pauseLeft').onclick = () => { if(readyA) playerA.pauseVideo(); };
+    document.getElementById('playRight').onclick = () => { if(readyB) playerB.playVideo(); };
+    document.getElementById('pauseRight').onclick = () => { if(readyB) playerB.pauseVideo(); };
+    document.getElementById('globalPlayPause').onclick = () => {
+        if(readyA && readyB) {
+            (playerA.getPlayerState()===1 || playerB.getPlayerState()===1) ? (playerA.pauseVideo(), playerB.pauseVideo()) : (playerA.playVideo(), playerB.playVideo());
         }
+    };
+    document.getElementById('autoSync').onclick = () => {
+        if(readyA && readyB) {
+            let timeA = playerA.getCurrentTime();
+            playerB.seekTo(timeA, true);
+            if(playerA.getPlayerState()===1) playerB.playVideo(); else playerB.pauseVideo();
+        } else alert("انتظر حتى تحميل الفيديوهين");
+    };
 
-        function setupDeck(id) {
-            const audio = document.getElementById('audio-' + id);
-            const source = audioCtx.createMediaElementSource(audio);
-            const gain = audioCtx.createGain();
-            const filter = audioCtx.createBiquadFilter();
-            
-            filter.type = "highpass";
-            filter.frequency.value = 20;
+    // تحميل فيديوهات جديدة
+    document.getElementById('loadLeft').onclick = () => {
+        let vid = getYoutubeId(document.getElementById('leftUrl').value.trim());
+        if(vid && readyA) playerA.loadVideoById(vid);
+        else if(vid && !readyA) alert("المشغل الأيسر لم يصبح جاهزاً بعد");
+        else alert("رابط يوتيوب غير صالح");
+    };
+    document.getElementById('loadRight').onclick = () => {
+        let vid = getYoutubeId(document.getElementById('rightUrl').value.trim());
+        if(vid && readyB) playerB.loadVideoById(vid);
+        else if(vid && !readyB) alert("المشغل الأيمن لم يصبح جاهزاً بعد");
+        else alert("رابط يوتيوب غير صالح");
+    };
 
-            source.connect(filter).connect(gain).connect(audioCtx.destination);
-            
-            decks[id].audio = audio;
-            decks[id].gain = gain;
-            decks[id].filter = filter;
-
-            audio.ontimeupdate = () => updateProgress(id);
-            audio.onended = () => playNext(id);
+    // تحديث الوقت
+    function updateTime() {
+        if(readyA && playerA.getCurrentTime) {
+            let cur = playerA.getCurrentTime(), dur = playerA.getDuration();
+            document.getElementById('timeLeft').innerHTML = `${formatTime(cur)} / ${formatTime(dur)}`;
         }
-
-        window.togglePlay = (id) => {
-            initAudio();
-            const deck = decks[id];
-            if (deck.audio.paused) {
-                deck.audio.play();
-                deck.playing = true;
-                document.getElementById('disc-' + id).classList.add('rotating');
-            } else {
-                deck.audio.pause();
-                deck.playing = false;
-                document.getElementById('disc-' + id).classList.remove('rotating');
-            }
-        };
-
-        window.stopDeck = (id) => {
-            const deck = decks[id];
-            deck.audio.pause();
-            deck.audio.currentTime = 0;
-            deck.playing = false;
-            document.getElementById('disc-' + id).classList.remove('rotating');
-        };
-
-        function updateProgress(id) {
-            const audio = decks[id].audio;
-            const prog = document.getElementById('progress-' + id);
-            const time = document.getElementById('time-' + id);
-            if (audio.duration) {
-                prog.value = (audio.currentTime / audio.duration) * 100;
-                const cur = formatTime(audio.currentTime);
-                const dur = formatTime(audio.duration);
-                time.innerText = `${cur} / ${dur}`;
-            }
+        if(readyB && playerB.getCurrentTime) {
+            let cur = playerB.getCurrentTime(), dur = playerB.getDuration();
+            document.getElementById('timeRight').innerHTML = `${formatTime(cur)} / ${formatTime(dur)}`;
         }
+    }
+    function formatTime(sec) { if(isNaN(sec)) return "00:00"; let m=Math.floor(sec/60), s=Math.floor(sec%60); return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }
+    setInterval(updateTime, 500);
 
-        function formatTime(secs) {
-            const m = Math.floor(secs / 60);
-            const s = Math.floor(secs % 60);
-            return `${m}:${s < 10 ? '0' + s : s}`;
-        }
-
-        // --- نظام الانتقال التلقائي ---
-        window.startTransition = (type) => {
-            initAudio();
-            const from = decks.a.playing ? 'a' : 'b';
-            const to = from === 'a' ? 'b' : 'a';
-            
-            // تجهيز القرص المستهدف بأغنية تالية إذا كان فارغاً
-            if (decks[to].audio.src === "") {
-                playNext(to);
-            }
-            
-            decks[to].audio.play();
-            document.getElementById('disc-' + to).classList.add('rotating');
-
-            const now = audioCtx.currentTime;
-            const duration = 4.0; // مدة الانتقال 4 ثواني
-
-            if (type === 'fade') {
-                // تداخل صوتي بسيط
-                decks[from].gain.gain.linearRampToValueAtTime(0, now + duration);
-                decks[to].gain.gain.linearRampToValueAtTime(0.8, now + duration);
-            } 
-            else if (type === 'riser') {
-                // رفع الطبقة + فلتر + فوليوم
-                decks[from].filter.frequency.exponentialRampToValueAtTime(5000, now + duration);
-                const startRate = decks[from].audio.playbackRate;
-                // محاكاة الـ Riser بتسريع الأغنية قليلاً
-                let interval = setInterval(() => {
-                    if (decks[from].audio.playbackRate < 1.3) decks[from].audio.playbackRate += 0.01;
-                }, 100);
-                
-                decks[from].gain.gain.linearRampToValueAtTime(0, now + duration);
-                decks[to].gain.gain.linearRampToValueAtTime(0.8, now + duration);
-
-                setTimeout(() => { 
-                    clearInterval(interval); 
-                    stopDeck(from);
-                    decks[from].audio.playbackRate = 1;
-                    decks[from].filter.frequency.value = 20;
-                }, duration * 1000);
-            } 
-            else if (type === 'sweep') {
-                // فلتر سويب قوي (High Pass)
-                decks[from].filter.frequency.exponentialRampToValueAtTime(15000, now + duration);
-                decks[from].gain.gain.linearRampToValueAtTime(0, now + duration);
-                decks[to].gain.gain.linearRampToValueAtTime(0.8, now + duration);
-                
-                setTimeout(() => {
-                    stopDeck(from);
-                    decks[from].filter.frequency.value = 20;
-                }, duration * 1000);
-            }
-        };
-
-        // فادي القائمة والتحميل
-        onValue(ref(db, 'songs'), (snapshot) => {
-            const listDiv = document.getElementById('songsList');
-            listDiv.innerHTML = "";
-            const data = snapshot.val();
-            if (data) {
-                globalPlaylist = Object.values(data);
-                globalPlaylist.forEach((song, index) => {
-                    const item = document.createElement('div');
-                    item.className = 'song-item';
-                    item.innerHTML = `<span>${song.title}</span>
-                        <div><button onclick="loadSong('a', ${index})">A</button>
-                        <button onclick="loadSong('b', ${index})">B</button></div>`;
-                    listDiv.appendChild(item);
-                });
-            }
+    // تهيئة المشغلين
+    function onYouTubeIframeAPIReady() {
+        playerA = new YT.Player('playerLeft', {
+            height: '100%', width: '100%', videoId: 'dQw4w9WgXcQ',
+            playerVars: { controls: 1, modestbranding: 1, rel: 0, autoplay: 0 },
+            events: { onReady: (e) => { readyA=true; applyVolumeMix(); }, onStateChange: updateTime }
         });
-
-        window.loadSong = (id, index) => {
-            const song = globalPlaylist[index];
-            decks[id].audio.src = song.link;
-            decks[id].index = index;
-            document.getElementById('info-' + id).innerText = song.title;
-            closeSearch();
-        };
-
-        function playNext(id) {
-            let next = decks[id].index + 1;
-            if (next >= globalPlaylist.length) next = 0;
-            loadSong(id, next);
-            decks[id].audio.play();
-        }
-
-        window.openSearch = () => document.getElementById('searchModal').style.display = 'flex';
-        window.closeSearch = () => document.getElementById('searchModal').style.display = 'none';
-
-        // المكسر والكروس فيدر
-        document.getElementById('fader-a').oninput = (e) => { if(decks.a.gain) decks.a.gain.gain.value = e.target.value; };
-        document.getElementById('fader-b').oninput = (e) => { if(decks.b.gain) decks.b.gain.gain.value = e.target.value; };
-        document.getElementById('crossfader').oninput = (e) => {
-            const val = parseFloat(e.target.value);
-            if(decks.a.gain) decks.a.gain.gain.value = Math.max(0, 1 - (val + 1) / 2);
-            if(decks.b.gain) decks.b.gain.gain.value = Math.max(0, (val + 1) / 2);
-        };
-    </script>
+        playerB = new YT.Player('playerRight', {
+            height: '100%', width: '100%', videoId: 'M7lc1UVf-VE',
+            playerVars: { controls: 1, modestbranding: 1, rel: 0, autoplay: 0 },
+            events: { onReady: (e) => { readyB=true; applyVolumeMix(); }, onStateChange: updateTime }
+        });
+    }
+    // تأكد من استدعاء الـ API
+    if(typeof YT === 'undefined') window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+    else onYouTubeIframeAPIReady();
+</script>
 </body>
 </html>
