@@ -3,137 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دي جي شواحة - Ashes Studio</title>
+    <title>دي جي شواحة - Ashes Studio PRO</title>
     <style>
-        body { 
-            background: #050505; 
-            color: #e0e0e0; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; 
-            padding: 20px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-        }
-
-        .dj-name {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 10px #1db954, 0 0 20px #1db954, 0 0 40px #1db954;
-            margin-bottom: 30px;
-            letter-spacing: 5px;
-            text-align: center;
-        }
-
-        .dj-console { 
-            display: flex; 
-            flex-wrap: wrap; 
-            justify-content: center; 
-            gap: 20px; 
-            width: 100%;
-            max-width: 1100px;
-        }
+        :root { --neon-green: #1db954; --bg-dark: #0a0a0a; --panel-bg: #161616; }
+        body { background: var(--bg-dark); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; }
         
-        .deck { 
-            width: 480px; 
-            background: linear-gradient(145deg, #1a1a1a, #111); 
-            border: 2px solid #333; 
-            border-radius: 30px; 
-            padding: 20px; 
-            text-align: center; 
-            box-shadow: 10px 10px 20px #000; 
-        }
+        .dj-header { text-align: center; margin-bottom: 20px; }
+        .dj-name { font-size: 2.8rem; font-weight: bold; text-shadow: 0 0 15px var(--neon-green); letter-spacing: 3px; margin: 0; }
+        .studio-tag { color: var(--neon-green); font-size: 0.9rem; letter-spacing: 5px; }
 
-        .turntable { 
-            width: 160px; height: 160px; 
-            background: radial-gradient(circle, #222 15%, #111 100%); 
-            border: 8px solid #333; border-radius: 50%; 
-            margin: 0 auto 15px; position: relative;
-            animation: rotate 4s linear infinite; animation-play-state: paused; 
-        }
-        .turntable::after { content: ""; position: absolute; top: 50%; left: 50%; width: 30px; height: 30px; background: #1db954; border-radius: 50%; transform: translate(-50%, -50%); }
-        .rotating { animation-play-state: running; }
+        /* توزيع الواجهة: Side by Side */
+        .main-container { display: flex; align-items: stretch; justify-content: center; gap: 15px; width: 100%; max-width: 1250px; margin-top: 10px; }
+
+        .deck { flex: 1; background: var(--panel-bg); border: 2px solid #333; border-radius: 25px; padding: 20px; text-align: center; box-shadow: 0 10px 30px #000; position: relative; }
         
-        .track-info { background: #000; color: #1db954; padding: 8px; border-radius: 10px; height: 25px; margin-bottom: 10px; border: 1px solid #1db954; font-family: monospace; overflow: hidden; }
+        /* المكسر الأوسط */
+        .center-mixer { width: 140px; background: #111; border: 2px solid #333; border-radius: 15px; display: flex; flex-direction: column; align-items: center; padding: 15px 5px; justify-content: space-between; }
+
+        .turntable { width: 140px; height: 140px; background: radial-gradient(circle, #222 15%, #000 100%); border: 6px solid #333; border-radius: 50%; margin: 0 auto 15px; position: relative; transition: transform 0.5s; }
+        .turntable::after { content: ""; position: absolute; top: 50%; left: 50%; width: 25px; height: 25px; background: var(--neon-green); border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 10px var(--neon-green); }
+        .rotating { animation: rotate 3s linear infinite; }
+
+        .track-info { background: #000; color: var(--neon-green); padding: 5px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; height: 20px; margin-bottom: 10px; border: 1px solid #222; overflow: hidden; }
         
-        .progress-container { margin: 10px 0; }
-        .time-display { font-size: 12px; color: #888; margin-bottom: 5px; }
-        input[type="range"] { width: 100%; accent-color: #1db954; cursor: pointer; }
+        .progress-box { margin-bottom: 10px; }
+        .time-txt { font-size: 11px; color: #777; margin-bottom: 3px; display: block; }
+        input[type="range"] { width: 100%; accent-color: var(--neon-green); cursor: pointer; }
 
-        .controls { margin-top: 15px; }
-        .vol-label { font-size: 12px; color: #666; display: block; margin-bottom: 5px; }
+        /* مكسر عمودي وفيدرات */
+        .v-slider { writing-mode: bt-lr; -webkit-appearance: slider-vertical; width: 10px; height: 180px; accent-color: var(--neon-green); }
+        .mixer-label { font-size: 10px; color: #666; margin: 5px 0; }
 
-        .btn-group { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
-        button { background: #222; color: #fff; border: 1px solid #444; padding: 10px 25px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        button:hover { background: #1db954; color: #000; }
+        /* أزرار الانتقال الذكي */
+        .auto-transition-unit { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
+        .fx-btn { background: #222; border: 1px solid var(--neon-green); color: var(--neon-green); padding: 8px; border-radius: 5px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .fx-btn:hover { background: var(--neon-green); color: #000; }
+        .fx-btn.active { background: #ff4444; color: #fff; border-color: #ff4444; }
 
-        .mixer-section { width: 100%; text-align: center; margin: 30px 0; background: #111; padding: 20px; border-radius: 15px; border: 1px solid #333; max-width: 400px; }
-        .search-btn { background: #1db954; padding: 15px 50px; border-radius: 50px; font-size: 1.2rem; color: #000; border: none; cursor: pointer; box-shadow: 0 0 20px rgba(29, 185, 84, 0.4); font-weight: bold; }
+        .btn-group { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+        .play-btn { background: #1db954; color: #000; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; flex: 1; }
+        .stop-btn { background: #333; color: #fff; border: none; padding: 10px 10px; border-radius: 5px; cursor: pointer; }
 
-        #searchModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: #1a1a1a; width: 90%; max-width: 500px; padding: 25px; border-radius: 20px; border: 1px solid #1db954; max-height: 70vh; overflow-y: auto; }
-        .song-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #333; }
-        .song-item:hover { background: #222; }
+        /* البحث في الأسفل */
+        .search-area { margin-top: 25px; }
+        .search-trigger { background: var(--neon-green); color: #000; border: none; padding: 15px 60px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px rgba(29, 185, 84, 0.4); }
+
+        #searchModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; }
+        .modal-content { background: #1a1a1a; width: 90%; max-width: 450px; padding: 25px; border-radius: 20px; border: 1px solid var(--neon-green); max-height: 70vh; overflow-y: auto; }
+        .song-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #222; }
+        .song-item button { background: #333; color: #fff; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; margin-left: 5px; }
 
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @media (max-width: 800px) { .main-container { flex-direction: column; align-items: center; } .center-mixer { width: 90%; height: auto; flex-direction: row; } .v-slider { height: 100px; } }
     </style>
 </head>
 <body>
 
-    <div class="dj-name">دي جي شواحة</div>
+    <div class="dj-header">
+        <div class="studio-tag">ASHES STUDIO</div>
+        <h1 class="dj-name">دي جي شواحة</h1>
+    </div>
 
-    <div class="dj-console">
-        <div class="deck">
+    <div class="main-container">
+        <div class="deck" id="panel-a">
             <div class="turntable" id="disc-a"></div>
-            <div class="track-info" id="info-a">بانتظار الأغنية...</div>
-            <div class="progress-container">
-                <div class="time-display" id="time-a">00:00 / 00:00</div>
+            <div class="track-info" id="info-a">قيد الانتظار A...</div>
+            
+            <div class="progress-box">
+                <span class="time-txt" id="time-a">00:00 / 00:00</span>
                 <input type="range" id="progress-a" min="0" max="100" value="0">
             </div>
-            <div class="controls">
-                <span class="vol-label">VOLUME DECK A</span>
-                <input type="range" id="vol-a" min="0" max="1" step="0.01" value="0.8">
-                <div class="btn-group">
-                    <button onclick="playDeck('a')">PLAY</button>
-                    <button onclick="pauseDeck('a')">STOP</button>
-                </div>
+
+            <div class="btn-group">
+                <button class="play-btn" onclick="togglePlay('a')">PLAY / PAUSE</button>
+                <button class="stop-btn" onclick="stopDeck('a')">■</button>
             </div>
-            <audio id="audio-a"></audio>
+            <audio id="audio-a" crossorigin="anonymous"></audio>
         </div>
 
-        <div class="deck">
+        <div class="center-mixer">
+            <div style="display:flex; gap: 15px;">
+                <div style="text-align:center">
+                    <div class="mixer-label">VOL A</div>
+                    <input type="range" class="v-slider" id="fader-a" min="0" max="1" step="0.01" value="0.8">
+                </div>
+                <div style="text-align:center">
+                    <div class="mixer-label">VOL B</div>
+                    <input type="range" class="v-slider" id="fader-b" min="0" max="1" step="0.01" value="0.8">
+                </div>
+            </div>
+
+            <div class="auto-transition-unit">
+                <div class="mixer-label" style="color:var(--neon-green)">AUTO SYNC</div>
+                <button class="fx-btn" onclick="startTransition('fade')">FADE ⇄</button>
+                <button class="fx-btn" onclick="startTransition('riser')">RISER ⚡</button>
+                <button class="fx-btn" onclick="startTransition('sweep')">SWEEP 🌊</button>
+            </div>
+
+            <div style="width:100%; text-align:center">
+                <div class="mixer-label">CROSSFADER</div>
+                <input type="range" id="crossfader" min="-1" max="1" step="0.01" value="0" style="width: 100px;">
+            </div>
+        </div>
+
+        <div class="deck" id="panel-b">
             <div class="turntable" id="disc-b"></div>
-            <div class="track-info" id="info-b">بانتظار الأغنية...</div>
-            <div class="progress-container">
-                <div class="time-display" id="time-b">00:00 / 00:00</div>
+            <div class="track-info" id="info-b">قيد الانتظار B...</div>
+            
+            <div class="progress-box">
+                <span class="time-txt" id="time-b">00:00 / 00:00</span>
                 <input type="range" id="progress-b" min="0" max="100" value="0">
             </div>
-            <div class="controls">
-                <span class="vol-label">VOLUME DECK B</span>
-                <input type="range" id="vol-b" min="0" max="1" step="0.01" value="0.8">
-                <div class="btn-group">
-                    <button onclick="playDeck('b')">PLAY</button>
-                    <button onclick="pauseDeck('b')">STOP</button>
-                </div>
+
+            <div class="btn-group">
+                <button class="play-btn" onclick="togglePlay('b')">PLAY / PAUSE</button>
+                <button class="stop-btn" onclick="stopDeck('b')">■</button>
             </div>
-            <audio id="audio-b"></audio>
+            <audio id="audio-b" crossorigin="anonymous"></audio>
         </div>
     </div>
 
-    <div class="mixer-section">
-        <div style="margin-bottom: 10px; font-weight: bold;">MIXER (CROSSFADER)</div>
-        <input type="range" id="crossfader" min="-1" max="1" step="0.01" value="0">
+    <div class="search-area">
+        <button class="search-trigger" onclick="openSearch()">🔍 مكتبة الأغاني السحابية</button>
     </div>
-
-    <button class="search-btn" onclick="openSearch()">🔍 ابحث عن أغنية في السحابة</button>
 
     <div id="searchModal">
         <div class="modal-content">
-            <h3 style="color:#1db954; text-align:center;">مكتبة أغاني دي جي شواحة</h3>
-            <div id="songsList">جاري تحميل الأغاني...</div>
+            <h3 style="color:var(--neon-green); text-align:center;">مكتبة شواحة</h3>
+            <div id="songsList">جاري جلب السحابة...</div>
             <br>
-            <button onclick="closeSearch()" style="width:100%; background:#444;">إغلاق القائمة</button>
+            <button onclick="closeSearch()" style="width:100%; background:#333; color:#fff; border:none; padding:10px; border-radius:10px;">إغلاق</button>
         </div>
     </div>
 
@@ -153,58 +152,135 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let globalPlaylist = []; // لتخزين قائمة الأغاني
-        let currentIndices = { a: -1, b: -1 }; // لتتبع الأغنية الحالية في كل قرص
+        let audioCtx;
+        const decks = {
+            a: { audio: null, source: null, gain: null, filter: null, playing: false, index: -1 },
+            b: { audio: null, source: null, gain: null, filter: null, playing: false, index: -1 }
+        };
+        let globalPlaylist = [];
 
-        window.openSearch = () => document.getElementById('searchModal').style.display = 'flex';
-        window.closeSearch = () => document.getElementById('searchModal').style.display = 'none';
+        // تهيئة الصوت عند أول ضغطة
+        function initAudio() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            setupDeck('a');
+            setupDeck('b');
+        }
 
-        const setupProgressBar = (deck) => {
-            const audio = document.getElementById('audio-' + deck);
-            const progress = document.getElementById('progress-' + deck);
-            const timeDisplay = document.getElementById('time-' + deck);
-
-            audio.ontimeupdate = () => {
-                if (audio.duration) {
-                    const pos = (audio.currentTime / audio.duration) * 100;
-                    progress.value = pos;
-                    const curM = Math.floor(audio.currentTime / 60);
-                    const curS = Math.floor(audio.currentTime % 60);
-                    const durM = Math.floor(audio.duration / 60);
-                    const durS = Math.floor(audio.duration % 60);
-                    timeDisplay.innerText = `${curM}:${curS<10?'0'+curS:curS} / ${durM}:${durS<10?'0'+durS:durS}`;
-                }
-            };
+        function setupDeck(id) {
+            const audio = document.getElementById('audio-' + id);
+            const source = audioCtx.createMediaElementSource(audio);
+            const gain = audioCtx.createGain();
+            const filter = audioCtx.createBiquadFilter();
             
-            // عندما تنتهي الأغنية، شغل التالية تلقائياً
-            audio.onended = () => {
-                playNext(deck);
-            };
+            filter.type = "highpass";
+            filter.frequency.value = 20;
 
-            progress.oninput = (e) => {
-                audio.currentTime = (e.target.value / 100) * audio.duration;
-            };
-        };
+            source.connect(filter).connect(gain).connect(audioCtx.destination);
+            
+            decks[id].audio = audio;
+            decks[id].gain = gain;
+            decks[id].filter = filter;
 
-        window.loadSong = (deck, index) => {
-            const song = globalPlaylist[index];
-            const audio = document.getElementById('audio-' + deck);
-            document.getElementById('info-' + deck).innerText = song.title;
-            audio.src = song.link;
-            currentIndices[deck] = index;
-            setupProgressBar(deck);
-            closeSearch();
-            playDeck(deck); // تشغيل تلقائي عند التحميل
-        };
+            audio.ontimeupdate = () => updateProgress(id);
+            audio.onended = () => playNext(id);
+        }
 
-        const playNext = (deck) => {
-            let nextIndex = currentIndices[deck] + 1;
-            if (nextIndex >= globalPlaylist.length) {
-                nextIndex = 0; // العودة لأول أغنية إذا انتهت القائمة
+        window.togglePlay = (id) => {
+            initAudio();
+            const deck = decks[id];
+            if (deck.audio.paused) {
+                deck.audio.play();
+                deck.playing = true;
+                document.getElementById('disc-' + id).classList.add('rotating');
+            } else {
+                deck.audio.pause();
+                deck.playing = false;
+                document.getElementById('disc-' + id).classList.remove('rotating');
             }
-            loadSong(deck, nextIndex);
         };
 
+        window.stopDeck = (id) => {
+            const deck = decks[id];
+            deck.audio.pause();
+            deck.audio.currentTime = 0;
+            deck.playing = false;
+            document.getElementById('disc-' + id).classList.remove('rotating');
+        };
+
+        function updateProgress(id) {
+            const audio = decks[id].audio;
+            const prog = document.getElementById('progress-' + id);
+            const time = document.getElementById('time-' + id);
+            if (audio.duration) {
+                prog.value = (audio.currentTime / audio.duration) * 100;
+                const cur = formatTime(audio.currentTime);
+                const dur = formatTime(audio.duration);
+                time.innerText = `${cur} / ${dur}`;
+            }
+        }
+
+        function formatTime(secs) {
+            const m = Math.floor(secs / 60);
+            const s = Math.floor(secs % 60);
+            return `${m}:${s < 10 ? '0' + s : s}`;
+        }
+
+        // --- نظام الانتقال التلقائي ---
+        window.startTransition = (type) => {
+            initAudio();
+            const from = decks.a.playing ? 'a' : 'b';
+            const to = from === 'a' ? 'b' : 'a';
+            
+            // تجهيز القرص المستهدف بأغنية تالية إذا كان فارغاً
+            if (decks[to].audio.src === "") {
+                playNext(to);
+            }
+            
+            decks[to].audio.play();
+            document.getElementById('disc-' + to).classList.add('rotating');
+
+            const now = audioCtx.currentTime;
+            const duration = 4.0; // مدة الانتقال 4 ثواني
+
+            if (type === 'fade') {
+                // تداخل صوتي بسيط
+                decks[from].gain.gain.linearRampToValueAtTime(0, now + duration);
+                decks[to].gain.gain.linearRampToValueAtTime(0.8, now + duration);
+            } 
+            else if (type === 'riser') {
+                // رفع الطبقة + فلتر + فوليوم
+                decks[from].filter.frequency.exponentialRampToValueAtTime(5000, now + duration);
+                const startRate = decks[from].audio.playbackRate;
+                // محاكاة الـ Riser بتسريع الأغنية قليلاً
+                let interval = setInterval(() => {
+                    if (decks[from].audio.playbackRate < 1.3) decks[from].audio.playbackRate += 0.01;
+                }, 100);
+                
+                decks[from].gain.gain.linearRampToValueAtTime(0, now + duration);
+                decks[to].gain.gain.linearRampToValueAtTime(0.8, now + duration);
+
+                setTimeout(() => { 
+                    clearInterval(interval); 
+                    stopDeck(from);
+                    decks[from].audio.playbackRate = 1;
+                    decks[from].filter.frequency.value = 20;
+                }, duration * 1000);
+            } 
+            else if (type === 'sweep') {
+                // فلتر سويب قوي (High Pass)
+                decks[from].filter.frequency.exponentialRampToValueAtTime(15000, now + duration);
+                decks[from].gain.gain.linearRampToValueAtTime(0, now + duration);
+                decks[to].gain.gain.linearRampToValueAtTime(0.8, now + duration);
+                
+                setTimeout(() => {
+                    stopDeck(from);
+                    decks[from].filter.frequency.value = 20;
+                }, duration * 1000);
+            }
+        };
+
+        // فادي القائمة والتحميل
         onValue(ref(db, 'songs'), (snapshot) => {
             const listDiv = document.getElementById('songsList');
             listDiv.innerHTML = "";
@@ -214,33 +290,39 @@
                 globalPlaylist.forEach((song, index) => {
                     const item = document.createElement('div');
                     item.className = 'song-item';
-                    item.innerHTML = `
-                        <span>${song.title}</span>
-                        <div>
-                            <button onclick="loadSong('a', ${index})">A</button>
-                            <button onclick="loadSong('b', ${index})">B</button>
-                        </div>
-                    `;
+                    item.innerHTML = `<span>${song.title}</span>
+                        <div><button onclick="loadSong('a', ${index})">A</button>
+                        <button onclick="loadSong('b', ${index})">B</button></div>`;
                     listDiv.appendChild(item);
                 });
             }
         });
 
-        window.playDeck = (deck) => { 
-            document.getElementById('audio-' + deck).play(); 
-            document.getElementById('disc-' + deck).classList.add('rotating'); 
-        };
-        window.pauseDeck = (deck) => { 
-            document.getElementById('audio-' + deck).pause(); 
-            document.getElementById('disc-' + deck).classList.remove('rotating'); 
+        window.loadSong = (id, index) => {
+            const song = globalPlaylist[index];
+            decks[id].audio.src = song.link;
+            decks[id].index = index;
+            document.getElementById('info-' + id).innerText = song.title;
+            closeSearch();
         };
 
-        document.getElementById('vol-a').oninput = (e) => document.getElementById('audio-a').volume = e.target.value;
-        document.getElementById('vol-b').oninput = (e) => document.getElementById('audio-b').volume = e.target.value;
+        function playNext(id) {
+            let next = decks[id].index + 1;
+            if (next >= globalPlaylist.length) next = 0;
+            loadSong(id, next);
+            decks[id].audio.play();
+        }
+
+        window.openSearch = () => document.getElementById('searchModal').style.display = 'flex';
+        window.closeSearch = () => document.getElementById('searchModal').style.display = 'none';
+
+        // المكسر والكروس فيدر
+        document.getElementById('fader-a').oninput = (e) => { if(decks.a.gain) decks.a.gain.gain.value = e.target.value; };
+        document.getElementById('fader-b').oninput = (e) => { if(decks.b.gain) decks.b.gain.gain.value = e.target.value; };
         document.getElementById('crossfader').oninput = (e) => {
             const val = parseFloat(e.target.value);
-            document.getElementById('audio-a').volume = Math.max(0, 1 - (val + 1) / 2);
-            document.getElementById('audio-b').volume = Math.max(0, (val + 1) / 2);
+            if(decks.a.gain) decks.a.gain.gain.value = Math.max(0, 1 - (val + 1) / 2);
+            if(decks.b.gain) decks.b.gain.gain.value = Math.max(0, (val + 1) / 2);
         };
     </script>
 </body>
