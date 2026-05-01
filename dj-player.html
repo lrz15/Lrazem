@@ -16,7 +16,6 @@
             align-items: center; 
         }
 
-        /* اسم دي جي شواحة البارز */
         .dj-name {
             font-size: 3rem;
             font-weight: bold;
@@ -33,104 +32,49 @@
             justify-content: center; 
             gap: 20px; 
             width: 100%;
-            max-width: 1000px;
+            max-width: 1100px;
         }
         
         .deck { 
-            width: 450px; 
+            width: 480px; 
             background: linear-gradient(145deg, #1a1a1a, #111); 
             border: 2px solid #333; 
             border-radius: 30px; 
             padding: 20px; 
             text-align: center; 
-            box-shadow: 10px 10px 20px #000, -5px -5px 15px #222; 
+            box-shadow: 10px 10px 20px #000; 
         }
 
         .turntable { 
-            width: 180px; 
-            height: 180px; 
+            width: 160px; height: 160px; 
             background: radial-gradient(circle, #222 15%, #111 100%); 
-            border: 8px solid #333; 
-            border-radius: 50%; 
-            margin: 0 auto 20px; 
-            position: relative;
-            animation: rotate 4s linear infinite; 
-            animation-play-state: paused; 
-            box-shadow: inset 0 0 10px #000;
+            border: 8px solid #333; border-radius: 50%; 
+            margin: 0 auto 15px; position: relative;
+            animation: rotate 4s linear infinite; animation-play-state: paused; 
         }
-        
-        .turntable::after {
-            content: "";
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 40px; height: 40px;
-            background: #1db954;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-        }
-
+        .turntable::after { content: ""; position: absolute; top: 50%; left: 50%; width: 30px; height: 30px; background: #1db954; border-radius: 50%; transform: translate(-50%, -50%); }
         .rotating { animation-play-state: running; }
         
-        .track-info { 
-            background: #000; 
-            color: #1db954;
-            padding: 10px; 
-            border-radius: 10px; 
-            height: 30px; 
-            margin-bottom: 20px; 
-            border: 1px solid #1db954;
-            font-family: monospace;
-            font-size: 1.1rem;
-        }
+        .track-info { background: #000; color: #1db954; padding: 8px; border-radius: 10px; height: 25px; margin-bottom: 10px; border: 1px solid #1db954; font-family: monospace; overflow: hidden; }
+        
+        .progress-container { margin: 10px 0; }
+        .time-display { font-size: 12px; color: #888; margin-bottom: 5px; }
+        input[type="range"] { width: 100%; accent-color: #1db954; cursor: pointer; }
 
-        .controls { width: 100%; }
-        
-        input[type="range"] { 
-            width: 90%; 
-            margin: 15px 0;
-            accent-color: #1db954; 
-        }
+        .controls { margin-top: 15px; }
+        .vol-label { font-size: 12px; color: #666; display: block; margin-bottom: 5px; }
 
-        .btn-group { display: flex; justify-content: center; gap: 15px; margin-top: 10px; }
-        
-        button { 
-            background: #222; 
-            color: #fff; 
-            border: 1px solid #444; 
-            padding: 10px 25px; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        
+        .btn-group { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
+        button { background: #222; color: #fff; border: 1px solid #444; padding: 10px 25px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
         button:hover { background: #1db954; color: #000; }
 
-        /* المكسر الأوسط */
-        .mixer-section { 
-            width: 100%; 
-            text-align: center; 
-            margin: 40px 0;
-            background: #111;
-            padding: 20px;
-            border-radius: 15px;
-            border: 1px solid #333;
-        }
-        
-        .crossfader { width: 300px !important; }
+        .mixer-section { width: 100%; text-align: center; margin: 30px 0; background: #111; padding: 20px; border-radius: 15px; border: 1px solid #333; max-width: 400px; }
+        .search-btn { background: #1db954; padding: 15px 50px; border-radius: 50px; font-size: 1.2rem; color: #000; border: none; cursor: pointer; box-shadow: 0 0 20px rgba(29, 185, 84, 0.4); font-weight: bold; }
 
-        /* زر البحث */
-        .search-section { margin-top: 40px; }
-        .search-btn { 
-            background: #1db954; 
-            padding: 15px 50px; 
-            border-radius: 50px; 
-            font-size: 1.2rem; 
-            color: #000; 
-            border: none; 
-            cursor: pointer; 
-            box-shadow: 0 0 20px rgba(29, 185, 84, 0.5);
-        }
+        #searchModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: #1a1a1a; width: 90%; max-width: 500px; padding: 25px; border-radius: 20px; border: 1px solid #1db954; max-height: 70vh; overflow-y: auto; }
+        .song-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #333; }
+        .song-item:hover { background: #222; }
 
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
@@ -143,9 +87,13 @@
         <div class="deck">
             <div class="turntable" id="disc-a"></div>
             <div class="track-info" id="info-a">بانتظار الأغنية...</div>
+            <div class="progress-container">
+                <div class="time-display" id="time-a">00:00 / 00:00</div>
+                <input type="range" id="progress-a" min="0" max="100" value="0">
+            </div>
             <div class="controls">
-                <input type="range" id="vol-control-a" min="0" max="1" step="0.01" value="0.8">
-                <div>VOLUME A</div>
+                <span class="vol-label">VOLUME DECK A</span>
+                <input type="range" id="vol-a" min="0" max="1" step="0.01" value="0.8">
                 <div class="btn-group">
                     <button onclick="playDeck('a')">PLAY</button>
                     <button onclick="pauseDeck('a')">STOP</button>
@@ -157,9 +105,13 @@
         <div class="deck">
             <div class="turntable" id="disc-b"></div>
             <div class="track-info" id="info-b">بانتظار الأغنية...</div>
+            <div class="progress-container">
+                <div class="time-display" id="time-b">00:00 / 00:00</div>
+                <input type="range" id="progress-b" min="0" max="100" value="0">
+            </div>
             <div class="controls">
-                <input type="range" id="vol-control-b" min="0" max="1" step="0.01" value="0.8">
-                <div>VOLUME B</div>
+                <span class="vol-label">VOLUME DECK B</span>
+                <input type="range" id="vol-b" min="0" max="1" step="0.01" value="0.8">
                 <div class="btn-group">
                     <button onclick="playDeck('b')">PLAY</button>
                     <button onclick="pauseDeck('b')">STOP</button>
@@ -170,12 +122,19 @@
     </div>
 
     <div class="mixer-section">
-        <div>MIXER (CROSSFADER)</div>
-        <input type="range" class="crossfader" id="crossfader" min="-1" max="1" step="0.01" value="0">
+        <div style="margin-bottom: 10px; font-weight: bold;">MIXER (CROSSFADER)</div>
+        <input type="range" id="crossfader" min="-1" max="1" step="0.01" value="0">
     </div>
 
-    <div class="search-section">
-        <button class="search-btn">🔍 ابحث عن أغنية في السحابة</button>
+    <button class="search-btn" onclick="openSearch()">🔍 ابحث عن أغنية في السحابة</button>
+
+    <div id="searchModal">
+        <div class="modal-content">
+            <h3 style="color:#1db954; text-align:center;">مكتبة أغاني دي جي شواحة</h3>
+            <div id="songsList">جاري تحميل الأغاني...</div>
+            <br>
+            <button onclick="closeSearch()" style="width:100%; background:#444;">إغلاق القائمة</button>
+        </div>
     </div>
 
     <script type="module">
@@ -194,32 +153,94 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // التحكم بالتشغيل
-        window.playDeck = (deck) => {
+        let globalPlaylist = []; // لتخزين قائمة الأغاني
+        let currentIndices = { a: -1, b: -1 }; // لتتبع الأغنية الحالية في كل قرص
+
+        window.openSearch = () => document.getElementById('searchModal').style.display = 'flex';
+        window.closeSearch = () => document.getElementById('searchModal').style.display = 'none';
+
+        const setupProgressBar = (deck) => {
             const audio = document.getElementById('audio-' + deck);
-            const disc = document.getElementById('disc-' + deck);
-            audio.play();
-            disc.classList.add('rotating');
+            const progress = document.getElementById('progress-' + deck);
+            const timeDisplay = document.getElementById('time-' + deck);
+
+            audio.ontimeupdate = () => {
+                if (audio.duration) {
+                    const pos = (audio.currentTime / audio.duration) * 100;
+                    progress.value = pos;
+                    const curM = Math.floor(audio.currentTime / 60);
+                    const curS = Math.floor(audio.currentTime % 60);
+                    const durM = Math.floor(audio.duration / 60);
+                    const durS = Math.floor(audio.duration % 60);
+                    timeDisplay.innerText = `${curM}:${curS<10?'0'+curS:curS} / ${durM}:${durS<10?'0'+durS:durS}`;
+                }
+            };
+            
+            // عندما تنتهي الأغنية، شغل التالية تلقائياً
+            audio.onended = () => {
+                playNext(deck);
+            };
+
+            progress.oninput = (e) => {
+                audio.currentTime = (e.target.value / 100) * audio.duration;
+            };
         };
 
-        window.pauseDeck = (deck) => {
+        window.loadSong = (deck, index) => {
+            const song = globalPlaylist[index];
             const audio = document.getElementById('audio-' + deck);
-            const disc = document.getElementById('disc-' + deck);
-            audio.pause();
-            disc.classList.remove('rotating');
+            document.getElementById('info-' + deck).innerText = song.title;
+            audio.src = song.link;
+            currentIndices[deck] = index;
+            setupProgressBar(deck);
+            closeSearch();
+            playDeck(deck); // تشغيل تلقائي عند التحميل
         };
 
-        // الربط مع الفوليوم
-        document.getElementById('vol-control-a').oninput = (e) => document.getElementById('audio-a').volume = e.target.value;
-        document.getElementById('vol-control-b').oninput = (e) => document.getElementById('audio-b').volume = e.target.value;
+        const playNext = (deck) => {
+            let nextIndex = currentIndices[deck] + 1;
+            if (nextIndex >= globalPlaylist.length) {
+                nextIndex = 0; // العودة لأول أغنية إذا انتهت القائمة
+            }
+            loadSong(deck, nextIndex);
+        };
 
-        // نظام الـ Crossfader
+        onValue(ref(db, 'songs'), (snapshot) => {
+            const listDiv = document.getElementById('songsList');
+            listDiv.innerHTML = "";
+            const data = snapshot.val();
+            if (data) {
+                globalPlaylist = Object.values(data);
+                globalPlaylist.forEach((song, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'song-item';
+                    item.innerHTML = `
+                        <span>${song.title}</span>
+                        <div>
+                            <button onclick="loadSong('a', ${index})">A</button>
+                            <button onclick="loadSong('b', ${index})">B</button>
+                        </div>
+                    `;
+                    listDiv.appendChild(item);
+                });
+            }
+        });
+
+        window.playDeck = (deck) => { 
+            document.getElementById('audio-' + deck).play(); 
+            document.getElementById('disc-' + deck).classList.add('rotating'); 
+        };
+        window.pauseDeck = (deck) => { 
+            document.getElementById('audio-' + deck).pause(); 
+            document.getElementById('disc-' + deck).classList.remove('rotating'); 
+        };
+
+        document.getElementById('vol-a').oninput = (e) => document.getElementById('audio-a').volume = e.target.value;
+        document.getElementById('vol-b').oninput = (e) => document.getElementById('audio-b').volume = e.target.value;
         document.getElementById('crossfader').oninput = (e) => {
             const val = parseFloat(e.target.value);
-            const audioA = document.getElementById('audio-a');
-            const audioB = document.getElementById('audio-b');
-            audioA.volume = Math.max(0, 1 - (val + 1) / 2);
-            audioB.volume = Math.max(0, (val + 1) / 2);
+            document.getElementById('audio-a').volume = Math.max(0, 1 - (val + 1) / 2);
+            document.getElementById('audio-b').volume = Math.max(0, (val + 1) / 2);
         };
     </script>
 </body>
