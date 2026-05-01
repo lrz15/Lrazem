@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دي جي شواحة - Ashes Studio</title>
+    <style>
+        body { 
+            background: #050505; 
+            color: #e0e0e0; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+
+        /* اسم دي جي شواحة البارز */
+        .dj-name {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px #1db954, 0 0 20px #1db954, 0 0 40px #1db954;
+            margin-bottom: 30px;
+            letter-spacing: 5px;
+            text-align: center;
+        }
+
+        .dj-console { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 20px; 
+            width: 100%;
+            max-width: 1000px;
+        }
+        
+        .deck { 
+            width: 450px; 
+            background: linear-gradient(145deg, #1a1a1a, #111); 
+            border: 2px solid #333; 
+            border-radius: 30px; 
+            padding: 20px; 
+            text-align: center; 
+            box-shadow: 10px 10px 20px #000, -5px -5px 15px #222; 
+        }
+
+        .turntable { 
+            width: 180px; 
+            height: 180px; 
+            background: radial-gradient(circle, #222 15%, #111 100%); 
+            border: 8px solid #333; 
+            border-radius: 50%; 
+            margin: 0 auto 20px; 
+            position: relative;
+            animation: rotate 4s linear infinite; 
+            animation-play-state: paused; 
+            box-shadow: inset 0 0 10px #000;
+        }
+        
+        .turntable::after {
+            content: "";
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 40px; height: 40px;
+            background: #1db954;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .rotating { animation-play-state: running; }
+        
+        .track-info { 
+            background: #000; 
+            color: #1db954;
+            padding: 10px; 
+            border-radius: 10px; 
+            height: 30px; 
+            margin-bottom: 20px; 
+            border: 1px solid #1db954;
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+
+        .controls { width: 100%; }
+        
+        input[type="range"] { 
+            width: 90%; 
+            margin: 15px 0;
+            accent-color: #1db954; 
+        }
+
+        .btn-group { display: flex; justify-content: center; gap: 15px; margin-top: 10px; }
+        
+        button { 
+            background: #222; 
+            color: #fff; 
+            border: 1px solid #444; 
+            padding: 10px 25px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        
+        button:hover { background: #1db954; color: #000; }
+
+        /* المكسر الأوسط */
+        .mixer-section { 
+            width: 100%; 
+            text-align: center; 
+            margin: 40px 0;
+            background: #111;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #333;
+        }
+        
+        .crossfader { width: 300px !important; }
+
+        /* زر البحث */
+        .search-section { margin-top: 40px; }
+        .search-btn { 
+            background: #1db954; 
+            padding: 15px 50px; 
+            border-radius: 50px; 
+            font-size: 1.2rem; 
+            color: #000; 
+            border: none; 
+            cursor: pointer; 
+            box-shadow: 0 0 20px rgba(29, 185, 84, 0.5);
+        }
+
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="dj-name">دي جي شواحة</div>
+
+    <div class="dj-console">
+        <div class="deck">
+            <div class="turntable" id="disc-a"></div>
+            <div class="track-info" id="info-a">بانتظار الأغنية...</div>
+            <div class="controls">
+                <input type="range" id="vol-control-a" min="0" max="1" step="0.01" value="0.8">
+                <div>VOLUME A</div>
+                <div class="btn-group">
+                    <button onclick="playDeck('a')">PLAY</button>
+                    <button onclick="pauseDeck('a')">STOP</button>
+                </div>
+            </div>
+            <audio id="audio-a"></audio>
+        </div>
+
+        <div class="deck">
+            <div class="turntable" id="disc-b"></div>
+            <div class="track-info" id="info-b">بانتظار الأغنية...</div>
+            <div class="controls">
+                <input type="range" id="vol-control-b" min="0" max="1" step="0.01" value="0.8">
+                <div>VOLUME B</div>
+                <div class="btn-group">
+                    <button onclick="playDeck('b')">PLAY</button>
+                    <button onclick="pauseDeck('b')">STOP</button>
+                </div>
+            </div>
+            <audio id="audio-b"></audio>
+        </div>
+    </div>
+
+    <div class="mixer-section">
+        <div>MIXER (CROSSFADER)</div>
+        <input type="range" class="crossfader" id="crossfader" min="-1" max="1" step="0.01" value="0">
+    </div>
+
+    <div class="search-section">
+        <button class="search-btn">🔍 ابحث عن أغنية في السحابة</button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAskiLw4M7EWxz1i-1REQUsGejAL3mQ44A",
+            authDomain: "ashes-studio.firebaseapp.com",
+            projectId: "ashes-studio",
+            storageBucket: "ashes-studio.firebasestorage.app",
+            messagingSenderId: "724089429725",
+            appId: "1:724089429725:web:4f1031dc4c72cefff60534"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // التحكم بالتشغيل
+        window.playDeck = (deck) => {
+            const audio = document.getElementById('audio-' + deck);
+            const disc = document.getElementById('disc-' + deck);
+            audio.play();
+            disc.classList.add('rotating');
+        };
+
+        window.pauseDeck = (deck) => {
+            const audio = document.getElementById('audio-' + deck);
+            const disc = document.getElementById('disc-' + deck);
+            audio.pause();
+            disc.classList.remove('rotating');
+        };
+
+        // الربط مع الفوليوم
+        document.getElementById('vol-control-a').oninput = (e) => document.getElementById('audio-a').volume = e.target.value;
+        document.getElementById('vol-control-b').oninput = (e) => document.getElementById('audio-b').volume = e.target.value;
+
+        // نظام الـ Crossfader
+        document.getElementById('crossfader').oninput = (e) => {
+            const val = parseFloat(e.target.value);
+            const audioA = document.getElementById('audio-a');
+            const audioB = document.getElementById('audio-b');
+            audioA.volume = Math.max(0, 1 - (val + 1) / 2);
+            audioB.volume = Math.max(0, (val + 1) / 2);
+        };
+    </script>
+</body>
+</html>
