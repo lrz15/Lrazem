@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>دي جي شواحة | نسخة Ashes Studio المحدثة</title>
+    <title>دي جي شواحة | كروس فيدر أوتوماتيكي - Ashes Studio</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* الحفاظ على الستايل الأصلي */
+        /* الحفاظ على الستايل الأصلي مع إضافات بسيطة */
         *{margin:0;padding:0;box-sizing:border-box;user-select:none;}
         body{background:linear-gradient(145deg,#0a0f1e,#0c1222);font-family:'Cairo',sans-serif;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;}
         .dj-container{max-width:1400px;width:100%;background:rgba(10,14,23,0.75);backdrop-filter:blur(10px);border-radius:48px;box-shadow:0 25px 45px rgba(0,0,0,0.5),inset 0 1px 1px rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:20px 25px 30px;}
@@ -28,8 +28,14 @@
         .btn-icon:hover{background:#ffaa33;color:#1e1e2a;transform:scale(1.02);}
         .mixer-panel{background:rgba(0,0,0,0.5);border-radius:60px;padding:18px 25px;margin-top:15px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px;backdrop-filter:blur(8px);border:1px solid rgba(255,200,100,0.3);}
         .crossfader-area{flex:2;min-width:180px;text-align:center;}
-        
-        /* ستايل المكتبة الجديد المتناسق */
+        .auto-crossfader-controls{background:rgba(0,0,0,0.4);border-radius:48px;padding:12px 20px;margin-top:15px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:15px;}
+        .auto-crossfader-controls label{color:#ffd966;font-weight:bold;margin-left:5px;}
+        .mode-select{display:flex;gap:10px;background:#1e1e2e;padding:5px 15px;border-radius:40px;}
+        .mode-select button{background:transparent;border:none;color:#ccc;padding:5px 12px;border-radius:30px;cursor:pointer;transition:0.2s;font-weight:bold;}
+        .mode-select button.active-mode{background:#ffaa44;color:#1e1e2a;}
+        #startAutoCross, #stopAutoCross{background:#2a2a4a;padding:5px 18px;}
+        #startAutoCross{background:#4caf50;}
+        #stopAutoCross{background:#f44336;}
         .library-box { margin-top: 30px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 32px; border: 1px solid rgba(255,255,255,0.05); }
         .search-bar { width: 100%; padding: 12px 20px; border-radius: 50px; border: 1px solid #333; background: #1a1a2e; color: white; margin-bottom: 20px; outline: none; }
         .songs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; max-height: 300px; overflow-y: auto; padding-right: 10px; }
@@ -41,6 +47,7 @@
         .load-btns button { flex: 1; padding: 5px; font-size: 0.7rem; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
         .btn-a { background: #1db954; color: white; }
         .btn-b { background: #ffaa44; color: black; }
+        .footer-note{text-align:center;margin-top:20px;color:#888;font-size:0.75rem;}
     </style>
 </head>
 <body>
@@ -78,18 +85,28 @@
             <div style="display:flex; justify-content:space-between; color:#aaa; font-size: 0.7rem; margin-top: 5px;"><span>قناة A</span><span>مزج</span><span>قناة B</span></div>
         </div>
         <div class="global-controls">
-            <button class="btn-icon big-btn" id="globalPlayPause"><i class="fas fa-play-circle"></i></button>
-            <button class="btn-icon sync-btn" id="autoSync"><i class="fas fa-sync"></i> SYNC</button>
+            <button class="btn-icon big-btn" id="globalPlayPause"><i class="fas fa-play-circle"></i> تشغيل/إيقاف الكل</button>
         </div>
+    </div>
+
+    <!-- أزرار الكروس فيدر الأوتوماتيكي + الخيارات -->
+    <div class="auto-crossfader-controls">
+        <span><i class="fas fa-robot"></i> كروس فيدر تلقائي:</span>
+        <div class="mode-select" id="modeSelect">
+            <button data-mode="fade" class="active-mode">Fade</button>
+            <button data-mode="riser">Riser</button>
+            <button data-mode="sweep">Sweep</button>
+        </div>
+        <button class="btn-icon" id="startAutoCross" style="background:#2e7d32;"><i class="fas fa-play"></i> تشغيل تلقائي</button>
+        <button class="btn-icon" id="stopAutoCross" style="background:#b71c1c;"><i class="fas fa-stop"></i> إيقاف</button>
     </div>
 
     <div class="library-box">
         <input type="text" id="searchInput" class="search-bar" placeholder="🔍 ابحث عن أغنية في Ashes Studio...">
-        <div id="songsList" class="songs-grid">
-            </div>
+        <div id="songsList" class="songs-grid"></div>
     </div>
 
-    <div class="footer-note">نظام Ashes Studio المطور | الربط التلقائي بمكتبة Firebase</div>
+    <div class="footer-note">نظام Ashes Studio المطور | كروس فيدر أوتوماتيكي (Fade, Riser, Sweep) مع إصلاح عدم عمل الفيديو</div>
 </div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
@@ -97,7 +114,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // إعدادات Firebase الخاصة بك
+    // Firebase config
     const firebaseConfig = {
         apiKey: "AIzaSyAskiLw4M7EWxz1i-1REQUsGejAL3mQ44A",
         authDomain: "ashes-studio.firebaseapp.com",
@@ -105,7 +122,6 @@
         databaseURL: "https://ashes-studio-default-rtdb.firebaseio.com",
         appId: "1:724089429725:web:4f1031dc4c72cefff60534"
     };
-
     const firebaseApp = initializeApp(firebaseConfig);
     const db = getDatabase(firebaseApp);
 
@@ -114,6 +130,37 @@
     let volAraw = 100, volBraw = 100, crossPos = 50;
     let allSongs = [];
     let currentIdxA = -1;
+
+    // متغيرات الكروس فيدر الأوتوماتيكي
+    let autoInterval = null;
+    let autoRafId = null;
+    let autoActive = false;
+    let currentMode = 'fade'; // fade, riser, sweep
+    let sweepDirection = 1; // 1: increasing, -1: decreasing
+    let riserStartTime = null;
+    let riserDuration = 3000; // 3 sec
+    let riserStartValue = 50;
+    let riserTargetValue = 0;
+    let riserEasing = t => t * t; // ease-in quadratic -> acceleration
+
+    // ---- إصلاح أخطاء الفيديو: ضمان تطبيق مستوى الصوت بعد التحميل والتشغيل ----
+    function ensureVolume(player, side) {
+        if (!player || typeof player.setVolume !== 'function') return;
+        setTimeout(() => {
+            if (side === 'A' && readyA) player.setVolume(Math.floor((1 - (crossPos/100)) * volAraw));
+            if (side === 'B' && readyB) player.setVolume(Math.floor((crossPos/100) * volBraw));
+        }, 150);
+    }
+
+    // ربط مستوى الصوت عند تغيير حالة الفيديو (لضمان عدم فقدان الإعداد)
+    function bindVolumeOnStateChange(player, side) {
+        if (!player || !player.addEventListener) return;
+        player.addEventListener('onStateChange', (e) => {
+            if (e.data === YT.PlayerState.PLAYING || e.data === YT.PlayerState.BUFFERING) {
+                ensureVolume(player, side);
+            }
+        });
+    }
 
     // جلب البيانات من المكتبة
     onValue(ref(db, 'songs'), (snapshot) => {
@@ -136,40 +183,64 @@
         `).join('');
     }
 
-    // نظام البحث
+    // البحث
     document.getElementById('searchInput').oninput = (e) => {
         const term = e.target.value.toLowerCase();
         const filtered = allSongs.filter(s => s.title.toLowerCase().includes(term));
         renderLibrary(filtered);
     };
 
-    // تحميل الأغنية وتحديث العنوان
     window.loadSong = (deck, id, index) => {
         const song = allSongs[index];
         if(deck === 'A') {
             currentIdxA = index;
-            if(readyA) playerA.loadVideoById(id);
+            if(readyA) {
+                playerA.loadVideoById(id);
+                ensureVolume(playerA, 'A');
+            }
             document.getElementById('displayTitleA').innerHTML = `<i class="fas fa-compact-disc"></i> ${song.title}`;
         } else {
-            if(readyB) playerB.loadVideoById(id);
+            if(readyB) {
+                playerB.loadVideoById(id);
+                ensureVolume(playerB, 'B');
+            }
             document.getElementById('displayTitleB').innerHTML = `<i class="fas fa-compact-disc"></i> ${song.title}`;
         }
     };
 
-    // منطق اليوتيوب والـ Crossfader الأصلي
+    // تطبيق المزج الحالي
+    function applyMix() {
+        if(!readyA || !readyB) return;
+        let fA = Math.floor((1 - (crossPos/100)) * volAraw);
+        let fB = Math.floor((crossPos/100) * volBraw);
+        playerA.setVolume(fA);
+        playerB.setVolume(fB);
+    }
+
+    // دالة لتحديث واجهة الكروس فيدر يدوياً
+    function updateCrossfaderUI(value) {
+        crossPos = Math.min(100, Math.max(0, value));
+        document.getElementById('crossfader').value = crossPos;
+        applyMix();
+    }
+
+    // إنشاء مشغلات اليوتيوب مع إصلاح الأخطاء
     window.onYouTubeIframeAPIReady = () => {
         playerA = new YT.Player('playerLeft', {
             height: '100%', width: '100%', videoId: 'dQw4w9WgXcQ',
             playerVars: { controls: 1, modestbranding: 1 },
             events: { 
-                onReady: () => { readyA = true; applyMix(); },
-                onStateChange: (e) => { if(e.data === 0) playNextA(); } 
+                onReady: () => { readyA = true; applyMix(); bindVolumeOnStateChange(playerA, 'A'); },
+                onStateChange: (e) => { if(e.data === 0) playNextA(); ensureVolume(playerA, 'A'); }
             }
         });
         playerB = new YT.Player('playerRight', {
             height: '100%', width: '100%', videoId: 'M7lc1UVf-VE',
             playerVars: { controls: 1, modestbranding: 1 },
-            events: { onReady: () => { readyB = true; applyMix(); } }
+            events: { 
+                onReady: () => { readyB = true; applyMix(); bindVolumeOnStateChange(playerB, 'B'); },
+                onStateChange: () => ensureVolume(playerB, 'B')
+            }
         });
     };
 
@@ -181,22 +252,114 @@
         }
     }
 
-    function applyMix() {
-        if(!readyA || !readyB) return;
-        let fA = Math.floor((1 - (crossPos/100)) * volAraw);
-        let fB = Math.floor((crossPos/100) * volBraw);
-        playerA.setVolume(fA);
-        playerB.setVolume(fB);
+    // ---- دوال الكروس فيدر التلقائي ----
+    function stopAutoCrossfader() {
+        if (autoInterval) { clearInterval(autoInterval); autoInterval = null; }
+        if (autoRafId) { cancelAnimationFrame(autoRafId); autoRafId = null; }
+        autoActive = false;
     }
 
-    // ربط عناصر التحكم
+    // وضع Fade (انتقال سلس إلى الجهة المقابلة مرة واحدة)
+    function startFade() {
+        const target = crossPos < 50 ? 100 : 0;
+        const start = crossPos;
+        const steps = 60;
+        let step = 0;
+        const stepVal = (target - start) / steps;
+        if (autoInterval) clearInterval(autoInterval);
+        autoInterval = setInterval(() => {
+            if (!autoActive) { clearInterval(autoInterval); return; }
+            step++;
+            const newVal = start + stepVal * step;
+            if ((step >= steps) || (stepVal > 0 && newVal >= target) || (stepVal < 0 && newVal <= target)) {
+                updateCrossfaderUI(target);
+                stopAutoCrossfader();
+            } else {
+                updateCrossfaderUI(newVal);
+            }
+        }, 30);
+    }
+
+    // وضع Riser (تسارع: حركة كاملة من الحالي إلى الطرف المقابل مع زيادة السرعة)
+    function startRiser() {
+        const target = crossPos < 50 ? 100 : 0;
+        const start = crossPos;
+        const startTime = performance.now();
+        const duration = 2500; // 2.5 ثانية
+        function animate(now) {
+            const elapsed = now - startTime;
+            let t = Math.min(1, elapsed / duration);
+            // ease-in quadratic: t^2
+            const eased = t * t;
+            const newVal = start + (target - start) * eased;
+            updateCrossfaderUI(newVal);
+            if (t < 1 && autoActive) {
+                autoRafId = requestAnimationFrame(animate);
+            } else {
+                updateCrossfaderUI(target);
+                stopAutoCrossfader();
+            }
+        }
+        autoRafId = requestAnimationFrame(animate);
+    }
+
+    // وضع Sweep (حركة مستمرة ذهاباً وإياباً بسرعة ثابتة)
+    function startSweep() {
+        sweepDirection = (crossPos >= 99) ? -1 : (crossPos <= 1) ? 1 : sweepDirection;
+        if (autoInterval) clearInterval(autoInterval);
+        autoInterval = setInterval(() => {
+            if (!autoActive) { clearInterval(autoInterval); return; }
+            let newVal = crossPos + (sweepDirection * 2);
+            if (newVal >= 100) { newVal = 100; sweepDirection = -1; }
+            if (newVal <= 0) { newVal = 0; sweepDirection = 1; }
+            updateCrossfaderUI(newVal);
+        }, 40);
+    }
+
+    function runAutoCrossfader(mode) {
+        stopAutoCrossfader();
+        autoActive = true;
+        if (mode === 'fade') startFade();
+        else if (mode === 'riser') startRiser();
+        else if (mode === 'sweep') startSweep();
+    }
+
+    // ربط أزرار الوضع
+    document.querySelectorAll('.mode-select button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.mode-select button').forEach(b => b.classList.remove('active-mode'));
+            btn.classList.add('active-mode');
+            currentMode = btn.getAttribute('data-mode');
+            if (autoActive) {
+                // إعادة التشغيل بالوضع الجديد
+                runAutoCrossfader(currentMode);
+            }
+        });
+    });
+    document.getElementById('startAutoCross').onclick = () => runAutoCrossfader(currentMode);
+    document.getElementById('stopAutoCross').onclick = () => stopAutoCrossfader();
+
+    // ---- باقي عناصر التحكم الأصلية ----
     document.getElementById('volLeft').oninput = (e) => { volAraw = e.target.value; document.getElementById('volLeftVal').innerText = volAraw+'%'; applyMix(); };
     document.getElementById('volRight').oninput = (e) => { volBraw = e.target.value; document.getElementById('volRightVal').innerText = volBraw+'%'; applyMix(); };
-    document.getElementById('crossfader').oninput = (e) => { crossPos = e.target.value; applyMix(); };
-    document.getElementById('playLeft').onclick = () => playerA.playVideo();
-    document.getElementById('pauseLeft').onclick = () => playerA.pauseVideo();
-    document.getElementById('playRight').onclick = () => playerB.playVideo();
-    document.getElementById('pauseRight').onclick = () => playerB.pauseVideo();
-</script>
-</body>
-</html>
+    document.getElementById('crossfader').oninput = (e) => { 
+        if (autoActive) stopAutoCrossfader();
+        updateCrossfaderUI(parseInt(e.target.value));
+    };
+    document.getElementById('playLeft').onclick = () => { if(readyA) playerA.playVideo(); };
+    document.getElementById('pauseLeft').onclick = () => { if(readyA) playerA.pauseVideo(); };
+    document.getElementById('playRight').onclick = () => { if(readyB) playerB.playVideo(); };
+    document.getElementById('pauseRight').onclick = () => { if(readyB) playerB.pauseVideo(); };
+    document.getElementById('loadLeft').onclick = () => {
+        let vid = document.getElementById('leftUrl').value;
+        if(vid && readyA) { playerA.loadVideoById(vid); ensureVolume(playerA, 'A'); }
+    };
+    document.getElementById('loadRight').onclick = () => {
+        let vid = document.getElementById('rightUrl').value;
+        if(vid && readyB) { playerB.loadVideoById(vid); ensureVolume(playerB, 'B'); }
+    };
+    // زر التشغيل/الإيقاف العالمي
+    document.getElementById('globalPlayPause').onclick = () => {
+        if(readyA && readyB) {
+            let stateA = playerA.getPlayerState();
+            let stateB = playerB.ge
