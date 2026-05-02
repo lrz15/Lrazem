@@ -63,8 +63,8 @@
             <div class="time-info" id="timeLeft">00:00 / 00:00</div>
             <div class="volume-control"><label>VOL A</label><input type="range" id="volLeft" min="0" max="100" value="100"><span id="volLeftVal">100%</span></div>
             <div class="btn-group">
-                <button class="btn-icon" id="playLeftBtn"><i class="fas fa-play"></i></button>
-                <button class="btn-icon" id="pauseLeftBtn"><i class="fas fa-pause"></i></button>
+                <button class="btn-icon" id="playLeft"><i class="fas fa-play"></i></button>
+                <button class="btn-icon" id="pauseLeft"><i class="fas fa-pause"></i></button>
             </div>
         </div>
 
@@ -74,8 +74,8 @@
             <div class="time-info" id="timeRight">00:00 / 00:00</div>
             <div class="volume-control"><label>VOL B</label><input type="range" id="volRight" min="0" max="100" value="100"><span id="volRightVal">100%</span></div>
             <div class="btn-group">
-                <button class="btn-icon" id="playRightBtn"><i class="fas fa-play"></i></button>
-                <button class="btn-icon" id="pauseRightBtn"><i class="fas fa-pause"></i></button>
+                <button class="btn-icon" id="playRight"><i class="fas fa-play"></i></button>
+                <button class="btn-icon" id="pauseRight"><i class="fas fa-pause"></i></button>
             </div>
         </div>
     </div>
@@ -103,8 +103,6 @@
     </div>
 </div>
 
-<script src="https://www.youtube.com/iframe_api"></script>
-
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -126,7 +124,7 @@
     let allSongs = [];
     let currentIdxA = -1;
 
-    // جلب الأغاني
+    // جلب البيانات من Firebase
     onValue(ref(db, 'songs'), (snapshot) => {
         const data = snapshot.val();
         allSongs = data ? Object.values(data).reverse() : [];
@@ -147,6 +145,7 @@
         `).join('');
     }
 
+    // جعل الوظائف متاحة عالمياً للأزرار
     window.loadSong = (deck, id, index) => {
         if(deck === 'A') {
             currentIdxA = index;
@@ -164,7 +163,7 @@
         playerB.setVolume(Math.floor((crossPos/100) * volBraw));
     }
 
-    // --- الإصلاح الجوهري هنا ---
+    // تهيئة YouTube IFrame API بشكل آمن ومستقر
     window.onYouTubeIframeAPIReady = () => {
         playerA = new YT.Player('playerLeft', {
             height: '100%', width: '100%', videoId: 'dQw4w9WgXcQ',
@@ -188,25 +187,26 @@
         }
     }
 
-    // التحكم بالأزرار
-    document.getElementById('playLeftBtn').onclick = () => playerA.playVideo();
-    document.getElementById('pauseLeftBtn').onclick = () => playerA.pauseVideo();
-    document.getElementById('playRightBtn').onclick = () => playerB.playVideo();
-    document.getElementById('pauseRightBtn').onclick = () => playerB.pauseVideo();
+    // تحميل المكتبة برمجياً لضمان التزامن
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    document.getElementById('volLeft').oninput = (e) => { 
-        volAraw = e.target.value; 
-        document.getElementById('volLeftVal').innerText = volAraw + '%'; 
-        applyMix(); 
-    };
-    document.getElementById('volRight').oninput = (e) => { 
-        volBraw = e.target.value; 
-        document.getElementById('volRightVal').innerText = volBraw + '%'; 
-        applyMix(); 
-    };
-    document.getElementById('crossfader').oninput = (e) => { 
-        crossPos = e.target.value; 
-        applyMix(); 
+    // ربط عناصر التحكم
+    document.getElementById('volLeft').oninput = (e) => { volAraw = e.target.value; document.getElementById('volLeftVal').innerText = volAraw+'%'; applyMix(); };
+    document.getElementById('volRight').oninput = (e) => { volBraw = e.target.value; document.getElementById('volRightVal').innerText = volBraw+'%'; applyMix(); };
+    document.getElementById('crossfader').oninput = (e) => { crossPos = e.target.value; applyMix(); };
+    
+    document.getElementById('playLeft').onclick = () => playerA.playVideo();
+    document.getElementById('pauseLeft').onclick = () => playerA.pauseVideo();
+    document.getElementById('playRight').onclick = () => playerB.playVideo();
+    document.getElementById('pauseRight').onclick = () => playerB.pauseVideo();
+    
+    document.getElementById('globalPlayPause').onclick = () => {
+        const stateA = playerA.getPlayerState();
+        if(stateA === 1) { playerA.pauseVideo(); playerB.pauseVideo(); } 
+        else { playerA.playVideo(); playerB.playVideo(); }
     };
 
     document.getElementById('autoMixBtn').onclick = () => {
@@ -214,8 +214,8 @@
         const crossfader = document.getElementById('crossfader');
         let start = parseInt(crossfader.value);
         let target = (start > 50) ? 0 : 100;
-        let duration = (type === 'fade') ? 4000 : (type === 'riser') ? 2000 : 800;
-        let steps = 40, stepTime = duration / steps;
+        let duration = (type === 'fade') ? 5000 : (type === 'riser') ? 3000 : 800;
+        let steps = 50, stepTime = duration / steps;
         let currentStep = 0;
 
         let interval = setInterval(() => {
@@ -231,24 +231,13 @@
         }, stepTime);
     };
 
-    document.getElementById('globalPlayPause').onclick = () => {
-        if(playerA.getPlayerState() === 1) { playerA.pauseVideo(); playerB.pauseVideo(); } 
-        else { playerA.playVideo(); playerB.playVideo(); }
-    };
-
+    // تحديث الوقت والبحث
     setInterval(() => {
-        if(readyA && playerA.getCurrentTime) {
-            document.getElementById('timeLeft').innerText = formatTime(playerA.getCurrentTime()) + " / " + formatTime(playerA.getDuration());
-        }
-        if(readyB && playerB.getCurrentTime) {
-            document.getElementById('timeRight').innerText = formatTime(playerB.getCurrentTime()) + " / " + formatTime(playerB.getDuration());
-        }
+        if(readyA && playerA.getCurrentTime) document.getElementById('timeLeft').innerText = formatTime(playerA.getCurrentTime()) + " / " + formatTime(playerA.getDuration());
+        if(readyB && playerB.getCurrentTime) document.getElementById('timeRight').innerText = formatTime(playerB.getCurrentTime()) + " / " + formatTime(playerB.getDuration());
     }, 1000);
 
-    function formatTime(s) { 
-        let m=Math.floor(s/60), sec=Math.floor(s%60); 
-        return m.toString().padStart(2,'0')+":"+sec.toString().padStart(2,'0'); 
-    }
+    function formatTime(s) { let m=Math.floor(s/60), sec=Math.floor(s%60); return m.toString().padStart(2,'0')+":"+sec.toString().padStart(2,'0'); }
 
     document.getElementById('searchInput').oninput = (e) => {
         const term = e.target.value.toLowerCase();
