@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title> دي جي شواحة|  shee7 Studio</title>
+    <title>دي جي شواحة | SHEE7 Studio</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -63,8 +63,8 @@
             <div class="time-info" id="timeLeft">00:00 / 00:00</div>
             <div class="volume-control"><label>VOL A</label><input type="range" id="volLeft" min="0" max="100" value="100"><span id="volLeftVal">100%</span></div>
             <div class="btn-group">
-                <button class="btn-icon" id="playLeft"><i class="fas fa-play"></i></button>
-                <button class="btn-icon" id="pauseLeft"><i class="fas fa-pause"></i></button>
+                <button class="btn-icon" id="playLeftBtn"><i class="fas fa-play"></i></button>
+                <button class="btn-icon" id="pauseLeftBtn"><i class="fas fa-pause"></i></button>
             </div>
         </div>
 
@@ -74,8 +74,8 @@
             <div class="time-info" id="timeRight">00:00 / 00:00</div>
             <div class="volume-control"><label>VOL B</label><input type="range" id="volRight" min="0" max="100" value="100"><span id="volRightVal">100%</span></div>
             <div class="btn-group">
-                <button class="btn-icon" id="playRight"><i class="fas fa-play"></i></button>
-                <button class="btn-icon" id="pauseRight"><i class="fas fa-pause"></i></button>
+                <button class="btn-icon" id="playRightBtn"><i class="fas fa-play"></i></button>
+                <button class="btn-icon" id="pauseRightBtn"><i class="fas fa-pause"></i></button>
             </div>
         </div>
     </div>
@@ -104,6 +104,7 @@
 </div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -125,7 +126,7 @@
     let allSongs = [];
     let currentIdxA = -1;
 
-    // جلب الأغاني من Firebase وتحديث المكتبة
+    // جلب الأغاني
     onValue(ref(db, 'songs'), (snapshot) => {
         const data = snapshot.val();
         allSongs = data ? Object.values(data).reverse() : [];
@@ -146,13 +147,6 @@
         `).join('');
     }
 
-    // نظام البحث في المكتبة
-    document.getElementById('searchInput').oninput = (e) => {
-        const term = e.target.value.toLowerCase();
-        renderLibrary(allSongs.filter(s => s.title.toLowerCase().includes(term)));
-    };
-
-    // تحميل الأغنية للمشغلات
     window.loadSong = (deck, id, index) => {
         if(deck === 'A') {
             currentIdxA = index;
@@ -164,14 +158,13 @@
         }
     };
 
-    // التحكم بالصوت والمزج اليدوي
     function applyMix() {
         if(!readyA || !readyB) return;
         playerA.setVolume(Math.floor((1 - (crossPos/100)) * volAraw));
         playerB.setVolume(Math.floor((crossPos/100) * volBraw));
     }
 
-    // تهيئة يوتيوب مع إصلاح الأمان
+    // --- الإصلاح الجوهري هنا ---
     window.onYouTubeIframeAPIReady = () => {
         playerA = new YT.Player('playerLeft', {
             height: '100%', width: '100%', videoId: 'dQw4w9WgXcQ',
@@ -188,7 +181,6 @@
         });
     };
 
-    // التشغيل التلقائي للأغنية التالية في القناة A
     function playNextA() {
         if(currentIdxA < allSongs.length - 1) {
             currentIdxA++;
@@ -196,14 +188,34 @@
         }
     }
 
-    // المزج الآلي الاحترافي (Fade, Riser, Sweep)
+    // التحكم بالأزرار
+    document.getElementById('playLeftBtn').onclick = () => playerA.playVideo();
+    document.getElementById('pauseLeftBtn').onclick = () => playerA.pauseVideo();
+    document.getElementById('playRightBtn').onclick = () => playerB.playVideo();
+    document.getElementById('pauseRightBtn').onclick = () => playerB.pauseVideo();
+
+    document.getElementById('volLeft').oninput = (e) => { 
+        volAraw = e.target.value; 
+        document.getElementById('volLeftVal').innerText = volAraw + '%'; 
+        applyMix(); 
+    };
+    document.getElementById('volRight').oninput = (e) => { 
+        volBraw = e.target.value; 
+        document.getElementById('volRightVal').innerText = volBraw + '%'; 
+        applyMix(); 
+    };
+    document.getElementById('crossfader').oninput = (e) => { 
+        crossPos = e.target.value; 
+        applyMix(); 
+    };
+
     document.getElementById('autoMixBtn').onclick = () => {
         const type = document.getElementById('mixType').value;
         const crossfader = document.getElementById('crossfader');
         let start = parseInt(crossfader.value);
         let target = (start > 50) ? 0 : 100;
-        let duration = (type === 'fade') ? 5000 : (type === 'riser') ? 3000 : 800;
-        let steps = 50, stepTime = duration / steps;
+        let duration = (type === 'fade') ? 4000 : (type === 'riser') ? 2000 : 800;
+        let steps = 40, stepTime = duration / steps;
         let currentStep = 0;
 
         let interval = setInterval(() => {
@@ -219,20 +231,11 @@
         }, stepTime);
     };
 
-    // ربط أزرار التحكم
-    document.getElementById('volLeft').oninput = (e) => { volAraw = e.target.value; document.getElementById('volLeftVal').innerText = volAraw+'%'; applyMix(); };
-    document.getElementById('volRight').oninput = (e) => { volBraw = e.target.value; document.getElementById('volRightVal').innerText = volBraw+'%'; applyMix(); };
-    document.getElementById('crossfader').oninput = (e) => { crossPos = e.target.value; applyMix(); };
-    document.getElementById('playLeft').onclick = () => playerA.playVideo();
-    document.getElementById('pauseLeft').onclick = () => playerA.pauseVideo();
-    document.getElementById('playRight').onclick = () => playerB.playVideo();
-    document.getElementById('pauseRight').onclick = () => playerB.pauseVideo();
     document.getElementById('globalPlayPause').onclick = () => {
         if(playerA.getPlayerState() === 1) { playerA.pauseVideo(); playerB.pauseVideo(); } 
         else { playerA.playVideo(); playerB.playVideo(); }
     };
 
-    // عداد الوقت
     setInterval(() => {
         if(readyA && playerA.getCurrentTime) {
             document.getElementById('timeLeft').innerText = formatTime(playerA.getCurrentTime()) + " / " + formatTime(playerA.getDuration());
@@ -242,7 +245,15 @@
         }
     }, 1000);
 
-    function formatTime(s) { let m=Math.floor(s/60), sec=Math.floor(s%60); return m.toString().padStart(2,'0')+":"+sec.toString().padStart(2,'0'); }
+    function formatTime(s) { 
+        let m=Math.floor(s/60), sec=Math.floor(s%60); 
+        return m.toString().padStart(2,'0')+":"+sec.toString().padStart(2,'0'); 
+    }
+
+    document.getElementById('searchInput').oninput = (e) => {
+        const term = e.target.value.toLowerCase();
+        renderLibrary(allSongs.filter(s => s.title.toLowerCase().includes(term)));
+    };
 </script>
 </body>
 </html>
